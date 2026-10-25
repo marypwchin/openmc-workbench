@@ -20,11 +20,13 @@ By Mary P. W. Chin
 ```text
 .
 ├── 0_nuclear_data/
-│   ├── 0_0_setting_up_nuclear_data.ipynb
-│   ├── 0_0_setting_up_nuclear_data.py
-│   ├── 0_1_exploring_endf-b8.1.ipynb
-│   ├── 0_2_cataloging_nuclear_data_libraries.feather
-│   └── 0_2_cataloging_nuclear_data_libraries.ipynb
+│   ├── 0_0_set_up_nuclear_data.ipynb
+│   ├── 0_0_set_up_nuclear_data.py
+│   ├── 0_1_explore_endf-b8.1.ipynb
+│   ├── 0_2_catalog_nuclear_data_libraries.ipynb
+│   ├── 0_2_cataloging_nuclear_data_libraries_catalog.feather
+│   ├── 0_2_cataloging_nuclear_data_libraries_df.feather
+│   └── 0_3_revisit_HDF5_extract_temperatures.ipynb
 ├── README.md
 ├── index.md
 ├── myst.yml
@@ -43,11 +45,13 @@ By Mary P. W. Chin
 │       ├── notebooks.yml
 │       └── publish.yml
 ├── 0_nuclear_data/
-│   ├── 0_0_setting_up_nuclear_data.ipynb
-│   ├── 0_0_setting_up_nuclear_data.py
-│   ├── 0_1_exploring_endf-b8.1.ipynb
-│   ├── 0_2_cataloging_nuclear_data_libraries.feather
-│   └── 0_2_cataloging_nuclear_data_libraries.ipynb
+│   ├── 0_0_set_up_nuclear_data.ipynb
+│   ├── 0_0_set_up_nuclear_data.py
+│   ├── 0_1_explore_endf-b8.1.ipynb
+│   ├── 0_2_catalog_nuclear_data_libraries.ipynb
+│   ├── 0_2_cataloging_nuclear_data_libraries_catalog.feather
+│   ├── 0_2_cataloging_nuclear_data_libraries_df.feather
+│   └── 0_3_revisit_HDF5_extract_temperatures.ipynb
 ├── docs/
 │   └── automation.md
 ├── scripts/

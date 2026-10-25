@@ -11,12 +11,13 @@ Start with the setup notebook if you wish to reproduce the examples locally, or 
 <!-- generated:notebooks -->
 | Notebook | What it covers |
 | --- | --- |
-| [Set up OpenMC nuclear data](0_nuclear_data/0_0_setting_up_nuclear_data.ipynb) | Install nuclear-data libraries, windowed multipole data, and depletion chains; check the resulting file layout. |
-| [Exploring ENDF/B-VIII.1](0_nuclear_data/0_1_exploring_endf-b8.1.ipynb) | Explore `cross_section.xml` and HDF5 data from ENDF/B-VIII.1, comparing direct XML/HDF5 inspection with the OpenMC Python API. |
-| [Cataloging nuclear data libraries](0_nuclear_data/0_2_cataloging_nuclear_data_libraries.ipynb) | Build a reference DataFrame cataloging material, MT numbers, and nuclear-data libraries. |
+| [Set up OpenMC nuclear data](0_nuclear_data/0_0_set_up_nuclear_data.ipynb) | Install nuclear-data libraries, windowed multipole data, and depletion chains; check the resulting file layout. |
+| [Exploring ENDF/B-VIII.1](0_nuclear_data/0_1_explore_endf-b8.1.ipynb) | Explore `cross_section.xml` and HDF5 data from ENDF/B-VIII.1, comparing direct XML/HDF5 inspection with the OpenMC Python API. |
+| [Cataloging nuclear data libraries](0_nuclear_data/0_2_catalog_nuclear_data_libraries.ipynb) | Build a reference DataFrame cataloging material, MT numbers, and nuclear-data libraries. |
+| [Revisit HDF5 and extract temperatures](0_nuclear_data/0_3_revisit_HDF5_extract_temperatures.ipynb) | Explore the structure of OpenMC neutron HDF5 files, inspect groups and attributes, extract MT temperatures, and compare temperature availability across nuclear-data libraries. |
 <!-- /generated:notebooks -->
 
-For text-only setup, the parallel Python script, [0_0_setting_up_nuclear_data.py](0_nuclear_data/0_0_setting_up_nuclear_data.py), serves the same purpose as [0_0_setting_up_nuclear_data.ipynb](0_nuclear_data/0_0_setting_up_nuclear_data.ipynb).
+For text-only setup, the parallel Python script, [0_0_set_up_nuclear_data.py](0_nuclear_data/0_0_set_up_nuclear_data.py), serves the same purpose as [0_0_set_up_nuclear_data.ipynb](0_nuclear_data/0_0_set_up_nuclear_data.ipynb).
 
 ## Reproducing the notebooks
 
