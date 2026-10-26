@@ -162,24 +162,18 @@ def readme_text(paths):
             for part in Path(path).parts:
                 node = node.setdefault(part, {})
         return '```text\n' + '\n'.join(['.'] + tree_lines(nodes(nested))) + '\n```'
-    # Keep infrastructure available on demand without crowding the workbench overview.
-    infrastructure = {'docs', 'scripts', 'requirements-dev.txt', 'pyproject.toml'}
-    visitor_paths = [p for p in paths if
-                     not any(part.startswith('.') for part in Path(p).parts)
-                     and Path(p).parts[0] not in infrastructure]
-    generated = (
-        START + '\n' + render_tree(visitor_paths) + '\n\n'
-        '<details>\n<summary>Full repository tree, tooling, and CI</summary>\n\n'
-        + render_tree(paths) + '\n\n'
-        'See the [automation guide](docs/automation.md), '
-        '[CI workflow](.github/workflows/notebooks.yml), and '
-        '[pre-commit configuration](.pre-commit-config.yaml).\n\n'
-        '</details>\n' + END
-    )
+    # Show the scientific notebooks; repository tooling remains discoverable in Git.
+    notebook_paths = [
+        p for p in paths
+        if p.endswith('.ipynb')
+        and len(Path(p).parts) >= 2
+        and re.match(r'^\d+_', Path(p).parts[0])
+    ]
+    generated = START + '\n' + render_tree(notebook_paths) + '\n' + END
     text = (ROOT / 'README.md').read_text(encoding='utf-8')
     if START in text:
         return re.sub(re.escape(START) + r'.*?' + re.escape(END), lambda _: generated, text, flags=re.S)
-    pattern = r'(## Repository structure\s*\n)```text\n.*?```'
+    pattern = r'(## (?:Repository structure|Notebooks)\s*\n)```text\n.*?```'
     text, count = re.subn(pattern, lambda m: m[1] + generated, text, count=1, flags=re.S)
     if count != 1:
         raise ValueError('README needs a Repository structure heading followed by a text fence')
@@ -260,9 +254,13 @@ def index_text():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
+    parser.add_argument(
+        '--readme-only', action='store_true',
+        help='Update/check only README.md; leave notebook files untouched',
+    )
     args = parser.parse_args()
     paths = repository_paths()
-    updates = [(ROOT / p, notebook_text(ROOT / p)) for p in paths if p.endswith('.ipynb')]
+    updates = [] if args.readme_only else ([(ROOT / p, notebook_text(ROOT / p)) for p in paths if p.endswith('.ipynb')])
     updates.append((ROOT / 'README.md', readme_text(paths)))
     # Process notebook updates first: notebook_details reads the on-disk description.
     updates.append((ROOT / 'index.md', index_text()))
