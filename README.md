@@ -1,5 +1,9 @@
 # OpenMC Workbench
 
+<p>
+<img src="assets/logo.png" alt="OpenMC Workbench logo" width="220">
+</p>
+
 [![Notebook CI](https://github.com/marypwchin/openmc-workbench/actions/workflows/notebooks.yml/badge.svg)](https://github.com/marypwchin/openmc-workbench/actions/workflows/notebooks.yml)
 [![Pages](https://github.com/marypwchin/openmc-workbench/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/marypwchin/openmc-workbench/actions/workflows/publish.yml)
 [![External links](https://github.com/marypwchin/openmc-workbench/actions/workflows/links.yml/badge.svg)](https://github.com/marypwchin/openmc-workbench/actions/workflows/links.yml)
@@ -29,6 +33,8 @@ By Mary P. W. Chin
 │   └── 0_3_revisit_HDF5_extract_temperatures.ipynb
 ├── 1_cross_sections/
 │   └── 1_0_survey_ways_to_plot.ipynb
+├── assets/
+│   └── logo.png
 ├── README.md
 ├── index.md
 ├── myst.yml
@@ -56,6 +62,8 @@ By Mary P. W. Chin
 │   └── 0_3_revisit_HDF5_extract_temperatures.ipynb
 ├── 1_cross_sections/
 │   └── 1_0_survey_ways_to_plot.ipynb
+├── assets/
+│   └── logo.png
 ├── docs/
 │   └── automation.md
 ├── scripts/

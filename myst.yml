@@ -16,6 +16,8 @@ project:
 site:
   template: book-theme
   options:
+    logo: assets/logo.png
     logo_text: OpenMC Workbench
+    logo_alt: OpenMC Workbench
   parts:
     primary_sidebar_footer: sidebar-footer.md
