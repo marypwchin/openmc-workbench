@@ -24,7 +24,7 @@
 #
 # Before running the installation:
 #
-# 1. Download **FENDL-3.2c → Neutron → ACE** from [IAEA](https://www-nds.iaea.org/fendl/) and save the ZIP in `~/Downloads/`. Set `LOCAL_ARCHIVES["fendl-3.2c"]` below to the saved filename. This archive is downloaded manually; the notebook converts it to HDF5.
+# 1. Download **FENDL-3.2c → Neutron → ACE** from [IAEA](https://nds.iaea.org/fendl/) and save the ZIP in `~/Downloads/`. Set `LOCAL_ARCHIVES["fendl-3.2c"]` below to the saved filename. This archive is downloaded manually; the notebook converts it to HDF5.
 # 2. Leave the other `LOCAL_ARCHIVES` values as `None`. The notebook downloads those HDF5 and WMP archives, and the depletion chains, automatically when installation is enabled.
 # 3. Run with `APPLY = False` to preview the steps, then set `APPLY = True` and rerun to create the directories and install the data.
 #
@@ -122,7 +122,7 @@ print("Install data:", APPLY)
 #
 # HDF5 archives and fast-spectrum depletion chains are linked from [OpenMC Cross Sections](https://openmc.org/data/). If a download is blocked, download the archive in a browser and set its path in `LOCAL_ARCHIVES`.
 #
-# Download **FENDL-3.2c → Neutron → ACE** from [IAEA](https://www-nds.iaea.org/fendl/), then set the local ZIP path above. This is neutron-only data at the supplied temperature; it is different from FENDL-3.2.
+# Download **FENDL-3.2c → Neutron → ACE** from [IAEA](https://nds.iaea.org/fendl/), then set the local ZIP path above. This is neutron-only data at the supplied temperature; it is different from FENDL-3.2.
 #
 # WMP v1.1 comes from the [MIT WMP Library release](https://github.com/mit-crpg/WMP_Library/releases/tag/v1.1). Select WMP and depletion chains separately when using them in a simulation.
 

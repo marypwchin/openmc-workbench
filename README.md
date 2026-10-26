@@ -63,6 +63,7 @@ By Mary P. W. Chin
 │   ├── check_notebooks.py
 │   └── update_structure.py
 ├── .gitignore
+├── .lycheeignore
 ├── .pre-commit-config.yaml
 ├── README.md
 ├── index.md
