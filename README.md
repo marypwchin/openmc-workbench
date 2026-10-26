@@ -24,8 +24,8 @@ By Mary P. W. Chin
 │   ├── 0_0_set_up_nuclear_data.py
 │   ├── 0_1_explore_endf-b8.1.ipynb
 │   ├── 0_2_catalog_nuclear_data_libraries.ipynb
-│   ├── 0_2_cataloging_nuclear_data_libraries_catalog.feather
-│   ├── 0_2_cataloging_nuclear_data_libraries_df.feather
+│   ├── 0_2_catalog_nuclear_data_libraries_catalog.feather
+│   ├── 0_2_catalog_nuclear_data_libraries_df.feather
 │   └── 0_3_revisit_HDF5_extract_temperatures.ipynb
 ├── 1_cross_sections/
 │   └── 1_0_survey_ways_to_plot.ipynb
@@ -51,8 +51,8 @@ By Mary P. W. Chin
 │   ├── 0_0_set_up_nuclear_data.py
 │   ├── 0_1_explore_endf-b8.1.ipynb
 │   ├── 0_2_catalog_nuclear_data_libraries.ipynb
-│   ├── 0_2_cataloging_nuclear_data_libraries_catalog.feather
-│   ├── 0_2_cataloging_nuclear_data_libraries_df.feather
+│   ├── 0_2_catalog_nuclear_data_libraries_catalog.feather
+│   ├── 0_2_catalog_nuclear_data_libraries_df.feather
 │   └── 0_3_revisit_HDF5_extract_temperatures.ipynb
 ├── 1_cross_sections/
 │   └── 1_0_survey_ways_to_plot.ipynb
