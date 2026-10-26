@@ -10,6 +10,9 @@ project:
     - title: Nuclear data
       children:
         - pattern: 0_nuclear_data/*.ipynb
+    - title: Cross sections
+      children:
+        - pattern: 1_cross_sections/*.ipynb
 site:
   template: book-theme
   options:

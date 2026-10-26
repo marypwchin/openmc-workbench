@@ -27,6 +27,8 @@ By Mary P. W. Chin
 │   ├── 0_2_cataloging_nuclear_data_libraries_catalog.feather
 │   ├── 0_2_cataloging_nuclear_data_libraries_df.feather
 │   └── 0_3_revisit_HDF5_extract_temperatures.ipynb
+├── 1_cross_sections/
+│   └── 1_0_survey_ways_to_plot.ipynb
 ├── README.md
 ├── index.md
 ├── myst.yml
@@ -52,6 +54,8 @@ By Mary P. W. Chin
 │   ├── 0_2_cataloging_nuclear_data_libraries_catalog.feather
 │   ├── 0_2_cataloging_nuclear_data_libraries_df.feather
 │   └── 0_3_revisit_HDF5_extract_temperatures.ipynb
+├── 1_cross_sections/
+│   └── 1_0_survey_ways_to_plot.ipynb
 ├── docs/
 │   └── automation.md
 ├── scripts/
