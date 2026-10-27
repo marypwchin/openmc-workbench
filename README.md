@@ -31,7 +31,8 @@ By Mary P. W. Chin
 │   ├── 0_2_catalog_nuclear_data_libraries.ipynb
 │   └── 0_3_revisit_HDF5_extract_temperatures.ipynb
 └── 1_cross_sections/
-    └── 1_0_survey_ways_to_plot.ipynb
+    ├── 1_0_survey_ways_to_plot.ipynb
+    └── 1_1_plot_cross_sections_for_nuclides_of_interest.ipynb
 ```
 <!-- /generated:structure -->
 

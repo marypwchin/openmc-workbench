@@ -225,34 +225,8 @@ def notebook_pages():
     return pages
 
 
-def index_text():
-    rows = ['| Notebook | What it covers |', '| --- | --- |']
-    for filename in notebook_pages():
-        path = ROOT / filename
-        if not path.is_file():
-            raise FileNotFoundError(f'myst.yml lists missing notebook: {filename}')
-        title, description = notebook_details(path)
-        # Escaped pipes cannot create extra columns in a Markdown table.
-        title = title.replace('|', r'\|')
-        description = description.replace('|', r'\|')
-        rows.append(f'| [{title}]({filename}) | {description} |')
-    generated = INDEX_START + '\n' + '\n'.join(rows) + '\n' + INDEX_END
-    text = (ROOT / 'index.md').read_text(encoding='utf-8')
-    if INDEX_START in text:
-        pattern = re.escape(INDEX_START) + r'.*?' + re.escape(INDEX_END)
-        return re.sub(pattern, lambda _: generated, text, flags=re.S)
-    # First run: migrate a hand-written two- or three-column Workbench table.
-    pattern = (r'(?m)^\| (?:Category \| )?Workbench \| What it covers \|\n'
-               r'\|[^\n]*\|\n(?:\|[^\n]*\|\n)*')
-    match = re.search(pattern, text)
-    if not match:
-        raise ValueError('index.md needs a Workbench table or generated:notebooks markers')
-    return (text[:match.start()].rstrip('\n') + '\n\n' + generated + '\n\n'
-            + text[match.end():].lstrip('\n'))
-
-
 # Shared content is authored in README.md. index.md presents a second view,
-# with its own notebook descriptions and page-specific navigation.
+# with notebook descriptions taken from their source Markdown cells.
 def shared_block(text, name):
     pattern = re.compile(
         r'<!-- shared:' + re.escape(name) + r' -->\n(.*?)\n<!-- /shared:'
@@ -264,7 +238,7 @@ def shared_block(text, name):
     return match.group(1)
 
 
-def index_text(paths, readme):
+def index_text(readme):
     text = (ROOT / 'index.md').read_text()
     title = re.search(r'^# .+$', readme, re.M)
     if not title:
@@ -290,24 +264,15 @@ def index_text(paths, readme):
     if not match:
         raise ValueError('Missing generated notebook table in index.md')
 
-    # Keep the manually written description and link label attached to each path.
-    saved = {}
-    row = re.compile(r'^\| \[(.*?)\]\(([^)]+\.ipynb)\) \| (.*?) \|$', re.M)
-    for label, path, description in row.findall(match.group(1)):
-        if path in saved:
-            raise ValueError(f'Duplicate notebook description: {path}')
-        saved[path] = label, description
-
-    notebooks = sorted(p for p in paths if p.endswith('.ipynb')
-                       and re.match(r'^\d+_', Path(p).parts[0]))
+    # Titles and descriptions are maintained in each notebook's title cell.
     lines = ['| Notebook | What it covers |', '| --- | --- |']
-    for path in notebooks:
-        if path in saved:
-            label, description = saved[path]
-        else:
-            label = Path(path).stem.replace('_', ' ').capitalize()
-            description = 'Description to be added.'
-            print(f'Notebook needs a description in index.md: {path}')
+    for path in notebook_pages():
+        notebook = ROOT / path
+        if not notebook.is_file():
+            raise FileNotFoundError(f'myst.yml lists missing notebook: {path}')
+        label, description = notebook_details(notebook)
+        label = label.replace('|', r'\|')
+        description = description.replace('|', r'\|')
         lines.append(f'| [{label}]({path}) | {description} |')
 
     generated = start + '\n' + '\n'.join(lines) + '\n' + end
@@ -329,7 +294,7 @@ def main():
     readme = readme_text(paths)
     updates.append((ROOT / 'README.md', readme))
     if not getattr(args, 'readme_only', False):
-        updates.append((ROOT / 'index.md', index_text(paths, readme)))
+        updates.append((ROOT / 'index.md', index_text(readme)))
 
     stale = False
     for path, content in updates:
