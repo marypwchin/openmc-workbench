@@ -10,11 +10,13 @@
 [![Documentation](https://img.shields.io/badge/docs-MyST-blue)](https://marypwchin.github.io/openmc-workbench/)
 
 
+<!-- shared:introduction -->
 **Ongoing work exploring [OpenMC](https://openmc.org/), building on an extensive background in Monte Carlo radiation transport.**
 
 This workbench explores OpenMC from the perspective of an experienced Monte Carlo radiation-transport physicist. It emphasizes hands-on investigation, computational workflows, and practical understanding.
 
 By Mary P. W. Chin
+<!-- /shared:introduction -->
 
 [**Read online →**](https://marypwchin.github.io/openmc-workbench/)
 
@@ -35,6 +37,7 @@ By Mary P. W. Chin
 
 ## Shared data location
 
+<!-- shared:data -->
 The notebooks and the setup script use [openmc_workbench_config.py](openmc_workbench_config.py)
 to locate the nuclear-data path, so that the path does not need to be defined in every notebook. Set `DATA_ROOT` in [openmc_workbench_config.py](openmc_workbench_config.py) to your nuclear-data path. To install this shared module, run
 `python -m pip install -e .` from the repository root in the Python environment
@@ -42,7 +45,10 @@ used by your Jupyter kernel. In a notebook, you can instead run
 `%pip install -e /absolute/path/to/openmc-workbench`, using your checkout's actual path.
 
 Review the setup notebook's disk-space requirements and preview the installation with `APPLY = False` before running with downloads or conversion.
+<!-- /shared:data -->
 
 ## Status
 
+<!-- shared:status -->
 This is an active, evolving workbench. Code, documentation, and analyses will be added and revised as the work progresses.
+<!-- /shared:status -->

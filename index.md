@@ -1,12 +1,20 @@
 # OpenMC Workbench
 
-This workbench explores OpenMC from the perspective of an experienced Monte Carlo radiation-transport physicist. It emphasizes hands-on investigation, computational workflows, and practical understanding. The notebooks combine explanations, Python examples, and comparisons between the OpenMC API and the underlying data files.
+<!-- shared:introduction -->
+**Ongoing work exploring [OpenMC](https://openmc.org/), building on an extensive background in Monte Carlo radiation transport.**
 
-This is an evolving workbench.
+This workbench explores OpenMC from the perspective of an experienced Monte Carlo radiation-transport physicist. It emphasizes hands-on investigation, computational workflows, and practical understanding.
 
-## Workbench notebooks
+By Mary P. W. Chin
+<!-- /shared:introduction -->
 
-Start with the setup notebook if you wish to reproduce the examples locally, or go directly to the exploration notebook to read the analysis.
+[**Source repository →**](https://github.com/marypwchin/openmc-workbench)
+
+## Notebooks
+
+Start with the [setup notebook](0_nuclear_data/0_0_set_up_nuclear_data.ipynb)
+if you wish to reproduce the examples locally. Otherwise, go directly to
+the [ENDF/B-VIII.1 exploration notebook](0_nuclear_data/0_1_explore_endf-b8.1.ipynb).
 
 <!-- generated:notebooks -->
 | Notebook | What it covers |
@@ -18,20 +26,26 @@ Start with the setup notebook if you wish to reproduce the examples locally, or 
 | [Survey ways to plot cross sections with OpenMC](1_cross_sections/1_0_survey_ways_to_plot.ipynb) | Survey three ways to plot continuous-energy cross sections in OpenMC: `plot_xs()`, `calculate_cexs()`, and direct access to HDF5 data. |
 <!-- /generated:notebooks -->
 
+Reading the notebooks does not require a local nuclear-data installation.
+Running the notebooks does: use a Python environment with OpenMC and the
+dependencies listed in the notebooks, and follow the setup instructions.
+
 For text-only setup, the parallel Python script, [0_0_set_up_nuclear_data.py](0_nuclear_data/0_0_set_up_nuclear_data.py), serves the same purpose as [0_0_set_up_nuclear_data.ipynb](0_nuclear_data/0_0_set_up_nuclear_data.ipynb).
 
-## Reproducing the notebooks
+## Shared data location
 
-Reading the notebooks does not require a local nuclear-data installation. Running the notebooks does: use a Python environment with OpenMC and the dependencies listed in the notebooks, and follow the setup instructions.
+<!-- shared:data -->
+The notebooks and the setup script use [openmc_workbench_config.py](openmc_workbench_config.py)
+to locate the nuclear-data path, so that the path does not need to be defined in every notebook. Set `DATA_ROOT` in [openmc_workbench_config.py](openmc_workbench_config.py) to your nuclear-data path. To install this shared module, run
+`python -m pip install -e .` from the repository root in the Python environment
+used by your Jupyter kernel. In a notebook, you can instead run
+`%pip install -e /absolute/path/to/openmc-workbench`, using your checkout's actual path.
 
-The notebooks and the setup script use [shared configuration](openmc_workbench_config.py) to locate the nuclear-data path, so that the path does not need to be defined in every notebook. Set `DATA_ROOT` in [openmc_workbench_config.py](openmc_workbench_config.py) to your nuclear-data path. From your local repository root, install that module into the Python environment used by your Jupyter kernel:
+Review the setup notebook's disk-space requirements and preview the installation with `APPLY = False` before running with downloads or conversion.
+<!-- /shared:data -->
 
-```sh
-python -m pip install -e .
-```
+## Status
 
-Review the setup notebook's disk-space requirements and preview the installation with `APPLY = False` before enabling downloads or conversion.
-
-## Source and contributions
-
-The notebooks and supporting code are maintained in the [OpenMC Workbench repository](https://github.com/marypwchin/openmc-workbench). For contributor setup, validation checks, and CI workflows, please see the [repository automation guide](docs/automation.md).
+<!-- shared:status -->
+This is an active, evolving workbench. Code, documentation, and analyses will be added and revised as the work progresses.
+<!-- /shared:status -->

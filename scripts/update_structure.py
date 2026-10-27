@@ -251,19 +251,86 @@ def index_text():
             + text[match.end():].lstrip('\n'))
 
 
+# Shared content is authored in README.md. index.md presents a second view,
+# with its own notebook descriptions and page-specific navigation.
+def shared_block(text, name):
+    pattern = re.compile(
+        r'<!-- shared:' + re.escape(name) + r' -->\n(.*?)\n<!-- /shared:'
+        + re.escape(name) + r' -->', re.S
+    )
+    match = pattern.search(text)
+    if not match:
+        raise ValueError(f'Missing shared {name} section in README.md')
+    return match.group(1)
+
+
+def index_text(paths, readme):
+    text = (ROOT / 'index.md').read_text()
+    title = re.search(r'^# .+$', readme, re.M)
+    if not title:
+        raise ValueError('README.md needs a top-level title')
+    text, n = re.subn(r'^# .+$', lambda _: title.group(), text, count=1, flags=re.M)
+    if n != 1:
+        raise ValueError('index.md needs a top-level title')
+
+    for section in ('introduction', 'data', 'status'):
+        content = shared_block(readme, section)
+        pattern = (r'<!-- shared:' + re.escape(section)
+                   + r' -->\n.*?\n<!-- /shared:' + re.escape(section) + r' -->')
+        replacement = ('<!-- shared:' + section + ' -->\n'
+                       + content + '\n<!-- /shared:' + section + ' -->')
+        text, n = re.subn(pattern, lambda _: replacement, text, count=1, flags=re.S)
+        if n != 1:
+            raise ValueError(f'Missing shared {section} markers in index.md')
+
+    start = '<!-- generated:notebooks -->'
+    end = '<!-- /generated:notebooks -->'
+    pattern = re.escape(start) + r'(.*?)' + re.escape(end)
+    match = re.search(pattern, text, flags=re.S)
+    if not match:
+        raise ValueError('Missing generated notebook table in index.md')
+
+    # Keep the manually written description and link label attached to each path.
+    saved = {}
+    row = re.compile(r'^\| \[(.*?)\]\(([^)]+\.ipynb)\) \| (.*?) \|$', re.M)
+    for label, path, description in row.findall(match.group(1)):
+        if path in saved:
+            raise ValueError(f'Duplicate notebook description: {path}')
+        saved[path] = label, description
+
+    notebooks = sorted(p for p in paths if p.endswith('.ipynb')
+                       and re.match(r'^\d+_', Path(p).parts[0]))
+    lines = ['| Notebook | What it covers |', '| --- | --- |']
+    for path in notebooks:
+        if path in saved:
+            label, description = saved[path]
+        else:
+            label = Path(path).stem.replace('_', ' ').capitalize()
+            description = 'Description to be added.'
+            print(f'Notebook needs a description in index.md: {path}')
+        lines.append(f'| [{label}]({path}) | {description} |')
+
+    generated = start + '\n' + '\n'.join(lines) + '\n' + end
+    return re.sub(pattern, lambda _: generated, text, count=1, flags=re.S)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
+    parser.add_argument('--pages-only', action='store_true',
+                        help='Update or check README.md and index.md without changing notebooks')
     parser.add_argument(
         '--readme-only', action='store_true',
         help='Update/check only README.md; leave notebook files untouched',
     )
     args = parser.parse_args()
     paths = repository_paths()
-    updates = [] if args.readme_only else ([(ROOT / p, notebook_text(ROOT / p)) for p in paths if p.endswith('.ipynb')])
-    updates.append((ROOT / 'README.md', readme_text(paths)))
-    # Process notebook updates first: notebook_details reads the on-disk description.
-    updates.append((ROOT / 'index.md', index_text()))
+    updates = [] if (args.readme_only or args.pages_only) else ([(ROOT / p, notebook_text(ROOT / p)) for p in paths if p.endswith('.ipynb')])
+    readme = readme_text(paths)
+    updates.append((ROOT / 'README.md', readme))
+    if not getattr(args, 'readme_only', False):
+        updates.append((ROOT / 'index.md', index_text(paths, readme)))
+
     stale = False
     for path, content in updates:
         if path.read_text(encoding='utf-8') != content:
