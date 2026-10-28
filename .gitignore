@@ -8,3 +8,8 @@ build/
 _build/
 .DS_Store
 ._*
+# OpenMC simulation outputs
+**/model.xml
+**/statepoint.*.h5
+**/summary.h5
+**/tallies.out

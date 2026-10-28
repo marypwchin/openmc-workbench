@@ -13,6 +13,9 @@ project:
     - title: Cross sections
       children:
         - pattern: 1_cross_sections/*.ipynb
+    - title: First simulations
+      children:
+        - pattern: 2_first_simulations/*.ipynb
 site:
   template: book-theme
   options:

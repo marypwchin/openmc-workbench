@@ -30,9 +30,11 @@ By Mary P. W. Chin
 │   ├── 0_1_explore_endf-b8.1.ipynb
 │   ├── 0_2_catalog_nuclear_data_libraries.ipynb
 │   └── 0_3_revisit_HDF5_extract_temperatures.ipynb
-└── 1_cross_sections/
-    ├── 1_0_survey_ways_to_plot.ipynb
-    └── 1_1_plot_cross_sections_for_nuclides_of_interest.ipynb
+├── 1_cross_sections/
+│   ├── 1_0_survey_ways_to_plot.ipynb
+│   └── 1_1_plot_cross_sections_for_nuclides_of_interest.ipynb
+└── 2_first_simulations/
+    └── 2_0_tritium_production_PbLi_concentric_spheres.ipynb
 ```
 <!-- /generated:structure -->
 
