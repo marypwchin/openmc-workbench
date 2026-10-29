@@ -13,3 +13,4 @@ _build/
 **/statepoint.*.h5
 **/summary.h5
 **/tallies.out
+output/

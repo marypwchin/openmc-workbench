@@ -24,7 +24,7 @@ the [ENDF/B-VIII.1 exploration notebook](0_nuclear_data/0_1_explore_endf-b8.1.ip
 | [Cataloging nuclear data libraries](0_nuclear_data/0_2_catalog_nuclear_data_libraries.ipynb) | Build a reference DataFrame cataloging material, MT numbers, and nuclear-data libraries. |
 | [Revisit HDF5 and extract temperatures](0_nuclear_data/0_3_revisit_HDF5_extract_temperatures.ipynb) | Explore the structure of OpenMC neutron HDF5 files, inspect groups and attributes, extract temperatures, and compare temperature availability across nuclear-data libraries. |
 | [Survey ways to plot cross sections with OpenMC](1_cross_sections/1_0_survey_ways_to_plot.ipynb) | Survey three ways to plot continuous-energy cross sections in OpenMC: `plot_xs()`, `calculate_cexs()`, and direct access to HDF5 data. |
-| [Plot microscopic cross sections for nuclides and reactions of interest](1_cross_sections/1_1_plot_cross_sections_for_nuclides_of_interest.ipynb) | Plot microscopic-cross-section pairs for nuclides and reactions of interest to fusion neutronics. |
+| [Make materials with and without neutronics_material_maker](1_cross_sections/1_1_plot_macroscopic_cross_sections_of_compounds.ipynb) | Compounds need to be defined before plotting macroscropic cross sections. Compare two ways to create OpenMC materials: defining elemental compositions, enrichment, and densities manually, and using predefined materials from `neutronics_material_maker`. |
 | [Tritium production in a PbLi concentric-spheres model](2_first_simulations/2_0_tritium_production_PbLi_concentric_spheres.ipynb) | Demonstrate setting up and running an OpenMC simulation using a simple concentric-sphere geometry with a lead–lithium (PbLi) breeding blanket. |
 <!-- /generated:notebooks -->
 
