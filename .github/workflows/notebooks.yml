@@ -26,30 +26,14 @@ jobs:
         working-directory: ${{ runner.temp }}
         run: |
           python - <<'PY'
-          import os
-          from pathlib import Path
-          import openmc_workbench_config as config
+          from openmc_workbench_config import DATA_ROOT, ENDF_B81
 
-          expected_root = Path(os.environ['RUNNER_TEMP']) / 'nuclear_data'
-          print('Module:', config.__file__)
-          print('Config file:', config.CONFIG_FILE)
-          print('Config file exists:', config.CONFIG_FILE.is_file())
-          if config.CONFIG_FILE.is_file():
-              print('Configured path:', repr(config.CONFIG_FILE.read_text().strip()))
-          print('RUNNER_TEMP:', os.environ.get('RUNNER_TEMP'))
-          print('Expected test root:', expected_root)
-          print('Expected test root exists:', expected_root.is_dir())
-          print('DATA_ROOT:', config.DATA_ROOT)
-          print('DATA_ROOT exists:', config.DATA_ROOT.is_dir())
-          print('Discovered libraries:', sorted(config.LIBRARY_PATHS))
+          assert DATA_ROOT.is_absolute()
+          assert DATA_ROOT.is_dir()
+          assert ENDF_B81 == DATA_ROOT / 'endf-b8.1'
+          assert ENDF_B81.is_dir()
 
-          assert config.DATA_ROOT.is_absolute(), 'DATA_ROOT is not absolute'
-          assert config.DATA_ROOT.is_dir(), f'DATA_ROOT does not exist: {config.DATA_ROOT}'
-          assert hasattr(config, 'ENDF_B81'), 'ENDF_B81 was not discovered'
-          assert config.ENDF_B81 == config.DATA_ROOT / 'endf-b8.1', 'ENDF_B81 path differs'
-          assert config.ENDF_B81.is_dir(), f'ENDF_B81 does not exist: {config.ENDF_B81}'
-
-          print('Shared configuration imports outside the repository:', config.ENDF_B81)
+          print('Shared configuration imports outside the repository:', ENDF_B81)
           PY
       - name: Check generated structures
         run: python scripts/update_structure.py --check
