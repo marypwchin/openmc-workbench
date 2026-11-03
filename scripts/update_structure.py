@@ -1,4 +1,4 @@
-"""Update notebook outlines, README tree and the index table; --check changes nothing."""
+"""Update notebook outlines and exploration lists; --check changes nothing."""
 import argparse
 import json
 import re
@@ -12,6 +12,7 @@ DESC_START = '<!-- index:description -->'
 DESC_END = '<!-- /index:description -->'
 INDEX_START = '<!-- generated:notebooks -->'
 INDEX_END = '<!-- /generated:notebooks -->'
+EXPLORATION_SUFFIXES = {'.ipynb', '.py', '.cpp'}
 
 
 def source(cell):
@@ -150,6 +151,17 @@ def repository_paths():
                    not excluded.intersection(Path(p).parts) and (ROOT / p).is_file()})
 
 
+def exploration_paths(paths):
+    """Numbered scientific explorations, excluding repository helper scripts."""
+    return sorted(
+        path for path in paths
+        if Path(path).suffix in EXPLORATION_SUFFIXES
+        and len(Path(path).parts) >= 2
+        and re.match(r'^\d+_', Path(path).parts[0])
+        and re.match(r'^\d+_', Path(path).name)
+    )
+
+
 def readme_text(paths):
     def nodes(mapping):
         return [(name + ('/' if value else ''), nodes(value))
@@ -162,21 +174,17 @@ def readme_text(paths):
             for part in Path(path).parts:
                 node = node.setdefault(part, {})
         return '```text\n' + '\n'.join(['.'] + tree_lines(nodes(nested))) + '\n```'
-    # Show the scientific notebooks; repository tooling remains discoverable in Git.
-    notebook_paths = [
-        p for p in paths
-        if p.endswith('.ipynb')
-        and len(Path(p).parts) >= 2
-        and re.match(r'^\d+_', Path(p).parts[0])
-    ]
-    generated = START + '\n' + render_tree(notebook_paths) + '\n' + END
+    # Show numbered notebooks, Python scripts, and C++ programs.
+    selected = exploration_paths(paths)
+    generated = START + '\n' + render_tree(selected) + '\n' + END
     text = (ROOT / 'README.md').read_text(encoding='utf-8')
+    text = re.sub(r'(?m)^## Notebooks$', '## Explorations', text)
     if START in text:
         return re.sub(re.escape(START) + r'.*?' + re.escape(END), lambda _: generated, text, flags=re.S)
-    pattern = r'(## (?:Repository structure|Notebooks)\s*\n)```text\n.*?```'
+    pattern = r'(## (?:Repository structure|Notebooks|Explorations)\s*\n)```text\n.*?```'
     text, count = re.subn(pattern, lambda m: m[1] + generated, text, count=1, flags=re.S)
     if count != 1:
-        raise ValueError('README needs a Repository structure heading followed by a text fence')
+        raise ValueError('README needs an Explorations heading followed by a text fence')
     return text
 
 
@@ -225,8 +233,8 @@ def notebook_pages():
     return pages
 
 
-# Shared content is authored in README.md. index.md presents a second view,
-# with notebook descriptions taken from their source Markdown cells.
+# Shared content is authored in README.md. index.md has the same shared text,
+# but a descriptive table rather than a directory tree.
 def shared_block(text, name):
     pattern = re.compile(
         r'<!-- shared:' + re.escape(name) + r' -->\n(.*?)\n<!-- /shared:'
@@ -238,14 +246,24 @@ def shared_block(text, name):
     return match.group(1)
 
 
-def index_text(readme):
-    text = (ROOT / 'index.md').read_text()
+def code_url(path):
+    """Link source files to GitHub so they also open from the MyST website."""
+    myst = (ROOT / 'myst.yml').read_text(encoding='utf-8')
+    match = re.search(r'(?m)^\s*github:\s*(https://\S+)', myst)
+    if match is None:
+        raise ValueError('myst.yml needs project.github for Python/C++ links')
+    return f'{match[1].rstrip("/")}/blob/main/{path}'
+
+
+def index_text(paths, readme):
+    text = (ROOT / 'index.md').read_text(encoding='utf-8')
     title = re.search(r'^# .+$', readme, re.M)
     if not title:
         raise ValueError('README.md needs a top-level title')
     text, n = re.subn(r'^# .+$', lambda _: title.group(), text, count=1, flags=re.M)
     if n != 1:
         raise ValueError('index.md needs a top-level title')
+    text = re.sub(r'(?m)^## Notebooks$', '## Explorations', text)
 
     for section in ('introduction', 'data', 'status'):
         content = shared_block(readme, section)
@@ -257,25 +275,39 @@ def index_text(readme):
         if n != 1:
             raise ValueError(f'Missing shared {section} markers in index.md')
 
-    start = '<!-- generated:notebooks -->'
-    end = '<!-- /generated:notebooks -->'
-    pattern = re.escape(start) + r'(.*?)' + re.escape(end)
+    pattern = re.escape(INDEX_START) + r'(.*?)' + re.escape(INDEX_END)
     match = re.search(pattern, text, flags=re.S)
     if not match:
-        raise ValueError('Missing generated notebook table in index.md')
+        raise ValueError('Missing generated:notebooks table in index.md')
 
-    # Titles and descriptions are maintained in each notebook's title cell.
-    lines = ['| Notebook | What it covers |', '| --- | --- |']
-    for path in notebook_pages():
-        notebook = ROOT / path
-        if not notebook.is_file():
-            raise FileNotFoundError(f'myst.yml lists missing notebook: {path}')
-        label, description = notebook_details(notebook)
-        label = label.replace('|', r'\|')
-        description = description.replace('|', r'\|')
-        lines.append(f'| [{label}]({path}) | {description} |')
+    # Keep existing descriptions for Python/C++ files, but always display
+    # the real filename for every exploration, including notebooks.
+    previous_descriptions = {}
+    row_pattern = r'^\| \[(.*?)\]\(([^)]+)\) \| (.*?) \|$'
+    for _label, url, description in re.findall(row_pattern, match[1], flags=re.M):
+        previous_descriptions[url] = description
 
-    generated = start + '\n' + '\n'.join(lines) + '\n' + end
+    # Keep the existing MyST notebook selection. Other numbered source files
+    # are added alongside them, sorted by path.
+    published_notebooks = set(notebook_pages())
+    selected = [path for path in exploration_paths(paths)
+                if not path.endswith('.ipynb') or path in published_notebooks]
+    lines = ['| File | What it covers |', '| --- | --- |']
+    for path in selected:
+        label = f'`{Path(path).name}`'
+        if path.endswith('.ipynb'):
+            _title, description = notebook_details(ROOT / path)
+            url = path
+        else:
+            url = code_url(path)
+            description = previous_descriptions.get(url, previous_descriptions.get(path))
+            if description is None:
+                description = 'Description to be added.'
+                print(f'Add a description for {path} in index.md')
+        description = description.replace('|', r'\|') if path.endswith('.ipynb') else description
+        lines.append(f'| [{label}]({url}) | {description} |')
+
+    generated = INDEX_START + '\n' + '\n'.join(lines) + '\n' + INDEX_END
     return re.sub(pattern, lambda _: generated, text, count=1, flags=re.S)
 
 
@@ -294,7 +326,7 @@ def main():
     readme = readme_text(paths)
     updates.append((ROOT / 'README.md', readme))
     if not getattr(args, 'readme_only', False):
-        updates.append((ROOT / 'index.md', index_text(readme)))
+        updates.append((ROOT / 'index.md', index_text(paths, readme)))
 
     stale = False
     for path, content in updates:

@@ -1,104 +1,60 @@
 # Repository automation: step by step
 
-## Files and how they fit together
+The repository includes scripts to keep the exploration lists up to date and check files before changes are committed. These checks help catch missing links, invalid notebooks, and Python errors. They do **not** run OpenMC calculations or verify scientific results.
 
-This layout follows common Python and GitHub conventions. The configuration
-formats are standard; the checks and helper scripts are tailored to this
-repository. Paths in this table are relative to the repository root.
+## Files and their purposes
 
-| File | Format | Purpose | Convention |
-| --- | --- | --- | --- |
-| [.github/workflows/notebooks.yml](../.github/workflows/notebooks.yml) | YAML | Defines push, pull-request, and manual triggers, then jobs and steps for repository validation. `run` executes shell commands; `uses` reuses GitHub Actions. | GitHub discovers workflow files in `.github/workflows/`; the filename is our choice. |
-| [.github/workflows/links.yml](../.github/workflows/links.yml) | YAML | Schedules external-link checks and allows manual runs. Extracts URLs from prose and passes them to Lychee. | Same workflow convention; separating scheduled checks is common. |
-| [.pre-commit-config.yaml](../.pre-commit-config.yaml) | YAML | Lists local hooks, commands, dependencies, and file filters. `repo: local` defines hooks within this repository. | Standard filename for pre-commit. Installing the Git hook activates it for this checkout. |
-| [requirements-dev.txt](../requirements-dev.txt) | pip requirements text | Lists development tools. `ruff==0.11.13`, for example, pins that package to an exact version. | Common filename, explicitly read by `pip install -r requirements-dev.txt`; pip does not discover it automatically. |
-| [pyproject.toml](../pyproject.toml) | TOML | Declares the package and build system. `[project]` contains package metadata; `[tool.setuptools]` selects the module to package. | Standard Python packaging file; enables `pip install -e .` here. |
-| [openmc_workbench_config.py](../openmc_workbench_config.py) | Python | Defines `DATA_ROOT` and `ENDF_B81` for import by the notebooks and the setup script. | Custom module; supports the notebooks rather than implementing a CI check. |
-| [scripts/update_structure.py](../scripts/update_structure.py) | Python | Regenerates notebook outlines, the README notebook tree, and the linked notebook table in `index.md`; synchronizes common prose from the README. `--check` detects stale content. | Custom script; `scripts/` is a common directory convention. |
-| [scripts/check_notebooks.py](../scripts/check_notebooks.py) | Python | Uses `nbformat` to validate notebook schemas without executing cells. | Custom wrapper around a standard notebook library. |
-| [scripts/check_links.py](../scripts/check_links.py) | Python | Parses Markdown, checks local file targets, and exports external prose URLs for Lychee. | Custom script shared by local hooks and CI. |
-| [docs/automation.md](automation.md) | Markdown | Explains installation, checks, and troubleshooting. | `docs/` is conventional; this filename is our choice. |
-| [.gitignore](../.gitignore) | Git ignore patterns | Excludes untracked environments, caches, checkpoints, and build artifacts from normal staging. It does not untrack files already committed. | Standard Git filename and pattern syntax. |
+The main files are listed below. Paths are relative to the repository root.
 
-The connections are:
+| File | Purpose |
+| --- | --- |
+| [.github/workflows/notebooks.yml](../.github/workflows/notebooks.yml) | Runs notebook and Python checks on GitHub after a push or pull request, or when started manually. |
+| [.github/workflows/links.yml](../.github/workflows/links.yml) | Checks external links weekly or when started manually. |
+| [.pre-commit-config.yaml](../.pre-commit-config.yaml) | Specifies the checks to run locally before a Git commit. |
+| [requirements-dev.txt](../requirements-dev.txt) | Lists the Python packages used for development and checking files. |
+| [pyproject.toml](../pyproject.toml) | Defines the installable Python module, allowing `python -m pip install -e .`. |
+| [openmc_workbench_config.py](../openmc_workbench_config.py) | Makes nuclear-data paths available to Python and generates the C++ header when run as a script. |
+| `data_root.txt` | User-created file containing the location of the nuclear-data libraries; not committed to Git. |
+| [data_root.example.txt](../data_root.example.txt) | Example to copy when creating `data_root.txt`. |
+| `openmc_workbench_config.hpp` | Generated C++ header containing the same nuclear-data directory names; not committed to Git. |
+| [scripts/update_structure.py](../scripts/update_structure.py) | Updates notebook outlines, the exploration lists in `README.md` and `index.md`, and text shared between those pages. |
+| [scripts/check_notebooks.py](../scripts/check_notebooks.py) | Checks notebook file structure without running notebook cells. |
+| [scripts/check_links.py](../scripts/check_links.py) | Checks links to files in the repository and collects external links for checking online. |
+| [.gitignore](../.gitignore) | Keeps local data paths, generated files, environments, and other unwanted files out of normal Git staging. |
 
-```text
-Local commit
-└── .pre-commit-config.yaml → helper scripts + Ruff
+GitHub workflow files use YAML (`.yml`), where indentation matters. Python packaging settings use TOML (`.toml`). The commands and scripts listed here are specific to OpenMC Workbench; the file formats are standard.
 
-GitHub push or pull request
-└── notebooks.yml → helper scripts + Ruff + configuration import check
+### Nuclear-data paths for Python and C++
 
-Weekly or manual external-link check
-└── links.yml → check_links.py → extracted URLs → Lychee
+The nuclear-data libraries reside outside the repository. Their location is specified once in `data_root.txt`, as explained in [Nuclear-data paths](../README.md#nuclear-data-paths).
 
-The notebooks and the text-only setup script
-└── openmc_workbench_config.py → shared nuclear-data locations
-```
+`openmc_workbench_config.py` has two uses:
 
-**YAML** means *YAML Ain't Markup Language*. Both `.yml` and `.yaml` denote
-the same format. Indentation expresses nesting; use spaces rather than tabs:
+- **In Python:** `from openmc_workbench_config import ENDF_B81` makes the path to an existing `endf-b8.1` directory available to a notebook or script. Importing the module does not generate files.
+- **For C++:** Running `python openmc_workbench_config.py` from the repository root generates `openmc_workbench_config.hpp`. A C++ program can then include the header using `#include "openmc_workbench_config.hpp"`.
 
-```yaml
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-```
+Directory names such as `endf-b8.1` and `fendl-3.2c` become `ENDF_B81` and `FENDL_32C`. If library directories are added, removed, or renamed, run the Python script again to regenerate the C++ header. Changing only the directory path in `data_root.txt` does not require regeneration; C++ reads that file when the program runs. The header should also be regenerated if the repository is moved.
 
-Here, `validate` names a job inside `jobs`, and `runs-on` selects its runner.
+## 1. Check what is generated
 
-**TOML** means *Tom's Obvious, Minimal Language*. Named sections group explicit
-key/value assignments:
+`scripts/update_structure.py` updates the outline near the beginning of each notebook. It reads Markdown headings (`#`, `##`, `###`, etc.), including headings in the first cell, and builds a text outline. Headings inside fenced code examples are ignored. Use one `#` title per notebook and `##` or `###` for its sections. Underlined headings and HTML headings are not supported.
 
-```toml
-[project]
-name = "openmc-workbench-config"
-version = "0.1.0"
-```
+The script also updates two views of the explorations:
 
-Configuration files describe what the tools should do. Python scripts implement
-the repository-specific operations, and Markdown explains the system to people.
-`.venv/` and `.ruff_cache/` are local tool-created directories, not workflow
-source files; keep them out of commits.
+- `README.md` shows a directory tree of numbered `.ipynb`, `.py`, and `.cpp` files in the numbered subject directories. Repository helper scripts and auxiliary files are excluded.
+- `index.md` shows a **File | What it covers** table with the filenames as links. Notebooks link to their MyST pages; Python and C++ source files link to GitHub.
 
-## 1. Understand generated content and shared prose
+Notebook descriptions are taken from the marked description in each notebook's first Markdown title cell. Descriptions of `.py` and `.cpp` files can be edited in the `index.md` table; the script retains them on later runs. New source files initially show `Description to be added.`
 
-`scripts/update_structure.py` reads Markdown ATX headings (`#` through `######`)
-in every nonignored notebook. It skips fenced code examples, turns the heading
-hierarchy into a text tree, and inserts a marked Markdown block immediately after
-the first `#` title. Headings inside that first cell are included too. Use one
-`#` title per notebook and `##`/`###` headings for its sections and subsections.
-Setext headings (underlined titles) and HTML headings are not supported.
+The **title, introduction, nuclear-data path instructions, and status** are maintained in `README.md` and copied into `index.md`. Edit this common text in `README.md`, not `index.md`. The logo, badges, and **Read online** link belong only to `README.md`; the source-repository link and exploration table belong only to `index.md`.
 
-The script also maintains two different presentations of the notebook inventory:
+The file list comes from Git: it includes tracked files and new files that are not ignored. Empty directories, checkpoints, virtual environments, and caches are omitted. Add unwanted local files or large data directories to `.gitignore`.
 
-- `README.md` shows a generated text-based tree of the scientific notebooks.
-  Auxiliary data files, scripts, and automation are omitted from that tree.
-- `index.md` shows a generated table with notebook links and descriptions.
-  The descriptions and link labels are retained when their notebook paths
-  remain unchanged; add or revise those descriptions in `index.md`.
+Only the marked notebook outline is updated. Code, outputs, execution counts, and metadata are retained, although the notebook file's JSON formatting may change. If a notebook is open during an update, reload it before saving again to avoid overwriting the new outline.
 
-`README.md` is the source for the common title, introduction, shared-data
-instructions, and status. These sections are synchronized into `index.md`.
-The logo, badges, and Read online link remain specific to `README.md`; the
-Source repository link and notebook table remain specific to `index.md`.
-Edit shared prose in `README.md`, not inside its synchronized `index.md` blocks.
+## 2. Update exploration lists and notebook outlines
 
-The file inventory comes from Git: tracked files plus nonignored new files
-that exist on disk. Empty directories, notebook checkpoints, virtual
-environments, and caches are omitted. Add large data directories and other
-local artifacts to `.gitignore` if they should not enter the inventory.
-
-The generator updates only the marked outline in each notebook. Notebook
-outputs, code, execution counts, and metadata are preserved, although JSON
-formatting may change when an outline is updated. Close or reload open
-notebooks after an external update so an older editor buffer does not
-overwrite the generated outline.
-
-## 2. Generate and inspect manually
-
-From the repository root, regenerate notebook outlines and both documentation
-views:
+From the repository root, update the notebook outlines and both exploration lists, then inspect the changes:
 
 ```sh
 python3 scripts/update_structure.py
@@ -107,23 +63,20 @@ git diff -- README.md index.md
 python3 scripts/update_structure.py --check
 ```
 
-To synchronize only the documentation pages, without writing any notebooks:
+If only the README or its common text has changed, update the two documentation pages without modifying notebooks:
 
 ```sh
 python3 scripts/update_structure.py --pages-only
 python3 scripts/update_structure.py --pages-only --check
 ```
 
-The `--readme-only` option updates or checks just the README, but does not
-synchronize `index.md`; use `--pages-only` for shared-prose changes.
+`--check` reports files that need updating but does not change them. A normal second run should produce no further changes. `--readme-only` updates `README.md` without updating `index.md`; use `--pages-only` when both pages need to remain synchronized.
 
-Inspect changed notebook outlines and both documentation views. `--check`
-reports stale generated content and exits nonzero without writing anything.
-A second normal run should make no changes. Regenerate after adding or moving
-notebooks, renaming headings, or changing shared README prose. When a notebook
-path changes, review its description in the `index.md` table.
+Run the script after adding, moving, or renaming exploration files; changing notebook headings or descriptions; or editing shared README text. Check descriptions in `index.md` for new or renamed `.py` and `.cpp` files.
 
-## 3. Install pre-commit in a local development environment
+## 3. Set up checks before committing
+
+The following commands create a local Python environment for repository checks and install the Git pre-commit hook. Run them from the repository root:
 
 ```sh
 python3 -m venv .venv
@@ -133,35 +86,24 @@ pre-commit validate-config
 pre-commit install
 ```
 
-This installs a Git pre-commit hook for this checkout. Each new clone needs the
-installation step. Hook environments are managed by pre-commit; the notebook
-validator uses the pinned nbformat dependency in the configuration. First use
-requires internet access to prepare those environments.
+The hook runs the configured checks before each commit. It must be installed separately in each new clone of the repository. The first run may need internet access to install its tools. This environment is for checking repository files; it does not replace the OpenMC environment used to run the notebooks.
 
-## 4. Run the configured checks
+## 4. Run the checks
+
+Run all configured checks with:
 
 ```sh
 pre-commit run --all-files
 ```
 
-Four hooks are configured (the configuration file defines their order):
+Four checks are included:
 
-1. Generate notebook outlines and synchronize the README/index views. It runs
-   on every commit because notebook paths, headings, and shared prose may change.
-2. Validate notebook schemas with nbformat. This checks notebook structure,
-   required fields, cell types, and metadata format. It does not validate the
-   scientific results or execute cells.
-3. Check local file links in Markdown files and notebook Markdown cells.
-   No internet is used for this check. It validates repository file/directory
-   targets, including reference links, images, and HTML `href`/`src` attributes.
-   Heading fragments and notebook attachments are not validated. Notebook code,
-   outputs, and fenced/inline code examples are excluded.
-4. Check Python files and notebook code cells with Ruff's `E9,F63,F7,F82,F401`
-   rules. These catch syntax errors, invalid control flow, undefined names,
-   and unused imports. This is a focused check, not full style linting,
-   formatting, or proof that the code will run successfully.
+1. **Exploration lists and notebook outlines:** Updates the exploration lists in `README.md` and `index.md`, refreshes notebook outlines, and keeps shared documentation synchronized.
+2. **Notebook structure:** Uses `nbformat` to check that notebook files are valid. It does not run their cells or check scientific results.
+3. **Local links:** Checks that linked repository files and directories exist, including links in notebook Markdown. It does not check heading links, notebook attachments, or links written inside code and output cells.
+4. **Python errors:** Uses Ruff with rules `E9,F63,F7,F82,F401` to catch syntax errors, invalid control flow, undefined names, and unused imports. It is not a full code review or scientific validation.
 
-To run each check individually:
+To run a particular check:
 
 ```sh
 pre-commit run update-structure --all-files
@@ -170,15 +112,13 @@ pre-commit run fatal-python-errors --all-files
 pre-commit run local-links --all-files
 ```
 
-Read each diagnostic's filename, cell/line, and rule code; fix the source,
-save the notebook, and rerun the failed hook. Ruff is configured without
-automatic fixes so that you can review each correction.
+The output identifies the file and, where available, the line or notebook cell involved. Make the correction and run the check again. Ruff reports issues without automatically changing the code.
 
-The first hook deliberately updates files. If it changes anything, pre-commit
-stops the commit for review. Review the changes, stage them, and run again.
-It never stages files automatically.
+The first check can modify files. If it does, the commit stops so you can inspect and stage the changes. Run the commit again after reviewing them; the hook does not stage files automatically.
 
-## 5. Review and stage the intended changes
+## 5. Review changes before committing
+
+The following commands show which files have changed and what will be included in a commit:
 
 ```sh
 git status --short
@@ -191,84 +131,47 @@ git diff --cached --stat
 git diff --cached
 ```
 
-`git diff --check` checks whitespace problems in unstaged changes; the cached
-version checks the staged patch. Review the staged diff for accidental data,
-private paths, unwanted outputs, and unrelated edits. When satisfied, commit
-with your chosen message. If a hook updates files again, review and re-stage
-those files, then retry the commit.
+`git diff --check` looks for whitespace problems. The `--cached` commands show changes already staged for the commit. Review them for accidental data files, personal directory paths, unwanted notebook outputs, or unrelated edits. If a check modifies files, inspect and stage those changes before committing.
 
-## 6. Keep slower or policy-dependent checks separate
+## 6. Check notebooks and results separately
 
-The automated checks are deliberately limited to fast, reproducible
-validation. The following activities require separate execution, additional
-testing infrastructure, or project-specific decisions:
+The automated checks are intentionally limited. The following still need separate attention:
 
-- **Clean-kernel execution:** run the analysis notebook from top to bottom in
-  the intended OpenMC environment after checking its data paths. Inspect the
-  results and assertions. This catches execution-order and dependency problems.
-  Install the shared module into that environment with `python -m pip install -e .`
-  from the repository root. The notebooks use `openmc_workbench_config` to locate
-  the installation; change `DATA_ROOT` there if your libraries are outside `~/data`.
-- **Installation notebook:** inspect `APPLY` and local archive paths before any
-  execution. Run the preview first. Full execution can download and install
-  many GB of nuclear data, so do not execute it in a commit hook.
-- **Outputs:** decide whether committed plots and tables are part of the workbench.
-  Do not automatically strip them until that policy is chosen.
-- **XML auditing unit tests:** no separate suite currently validates XML/HDF5
-  index semantics, referenced-file completeness, or relative-path resolution.
-  Notebook-schema checks do not provide this validation.
-- **Broader linting/formatting:** the fatal Ruff rules are configured. Style
-  formatting and broader rule sets can be added separately.
-- **Scientific validation:** check library provenance, data-path assumptions,
-  and physical comparisons independently. Schema validation cannot establish
-  scientific correctness.
+- **Run notebooks from start to finish.** Use the intended OpenMC Python environment and check the results, including assertions. This can reveal problems caused by executing cells out of order or by missing dependencies. Set the nuclear-data directory in `data_root.txt` and install the module using `python -m pip install -e .`, as described in the [README](../README.md#nuclear-data-paths).
+- **Install nuclear data deliberately.** `0_0_set_up_nuclear_data.ipynb` and `0_0_set_up_nuclear_data.py` are alternative ways to install the libraries. Check the required disk space and the `LOCAL_ARCHIVES` paths, then preview with `APPLY = False`. Do not include these downloads and conversions in a commit check.
+- **Keep or remove notebook outputs deliberately.** Plots and tables may be useful to readers; the checks do not automatically delete them.
+- **Check XML and HDF5 content.** The notebook-file checks do not verify that XML indexes are complete, that their referenced files exist, or that nuclear-data files contain the expected information. No separate test suite currently covers these checks.
+- **Apply additional code-formatting checks if needed.** The current Ruff rules target clear errors and unused imports rather than general style.
+- **Validate the physics independently.** Data provenance, assumptions, transport results, and physical comparisons require scientific assessment; passing the automated checks does not establish their correctness.
 
-## 7. Run the same checks on GitHub
+## 7. Run the checks on GitHub
 
-`.github/workflows/notebooks.yml` runs on pushes, pull requests, and manual
-dispatch. After reviewing, committing, and pushing these files, open the
-repository's **Actions** tab and select **Validate notebooks**. Open each step
-to see diagnostics. For a manual rerun, select **Run workflow** after the
-workflow is on the default branch.
+`.github/workflows/notebooks.yml` runs after a push or pull request and can also be started manually. To view the results, open the repository's **Actions** tab, select **Validate notebooks**, and inspect the steps. Use **Run workflow** for a manual run when the workflow is available on the default branch.
 
-CI uses `--check` for generated content: it detects stale notebook outlines,
-README structure, and synchronized `index.md` content without writing changes.
-Fix locally with `python scripts/update_structure.py`, review and commit the
-updated files, then push again. To reproduce the other CI steps:
+GitHub checks generated content using `--check`, without writing changes. If it reports outdated notebook outlines or exploration lists, run `python scripts/update_structure.py` locally, review the changes, and commit them.
+
+To run two of the checks locally:
 
 ```sh
 python scripts/check_notebooks.py 0_nuclear_data/*.ipynb
 ruff check --select E9,F63,F7,F82,F401 .
 ```
 
-CI does not install OpenMC, execute notebooks, download nuclear data, or run
-transport simulations. Local hooks can be bypassed; GitHub checks provide
-an independent check on the pushed revision.
-CI also installs the shared configuration module and checks that it imports
-from outside the checkout, with an absolute data root and the ENDF/B-VIII.1 path.
+GitHub also installs `openmc_workbench_config` and checks that it can import `DATA_ROOT` and `ENDF_B81` from outside the repository. The test creates a small, temporary `endf-b8.1` directory and a `data_root.txt`; it does not download nuclear data. The workflow does not generate or compile the C++ header.
+
+GitHub does not install OpenMC, run notebook cells, or perform transport simulations. These checks supplement, rather than replace, local testing and scientific review.
 
 References: https://pre-commit.com/ and https://nbformat.readthedocs.io/
 
-## 8. Check external links weekly
+## 8. Check external links
 
-`.github/workflows/links.yml` runs separately each Monday at 13:23 UTC, or
-manually via **Actions → Check external links → Run workflow**. Scheduled
-workflows run from the default branch, so merge and push the workflow there
-to activate it. GitHub may delay scheduled runs.
+`.github/workflows/links.yml` checks external links each Monday at 13:23 UTC. The check can also be started manually through **Actions → Check external links → Run workflow**. GitHub runs scheduled workflows from the default branch and may start them later than the scheduled time.
 
-The workflow extracts unique HTTP/HTTPS links from Markdown and notebook
-Markdown cells, then sends the list to Lychee. Bare URLs in prose are included;
-links in code cells, outputs, and code examples are excluded. It does not
-download the nuclear-data archives referenced only in setup code.
+The workflow collects HTTP and HTTPS links from Markdown files and notebook Markdown cells, then passes them to Lychee for checking. Links within code cells, outputs, and code examples are excluded. It does not download nuclear-data archives referenced only in setup code.
 
-Failures appear in that workflow's log and job summary, independently of the
-Notebook CI badge. A failed HTTP check is a signal to investigate: open the URL
-in your browser before changing it. A 403 can indicate bot blocking and a 429
-can indicate rate limiting; neither proves the page has disappeared. Requests
-are limited to four concurrent checks with retries, but blocking can still occur.
-No 403/429 responses are silently treated as successes.
+Failed links appear in the workflow log and summary. A response such as HTTP 403 (access denied) or 429 (too many requests) may reflect blocking or rate limits rather than a missing page. Check the link in a browser before changing it. The workflow limits simultaneous requests to four and retries failures, but some sites may still block automated checks.
 
-To reproduce extraction locally (the output alone does not check the internet):
+To collect the external links locally, without checking them online:
 
 ```sh
 python scripts/check_links.py

@@ -18,13 +18,21 @@ jobs:
           python-version: '3.13'
       - name: Install validation tools
         run: python -m pip install -r requirements-dev.txt -e .
+      - name: Set up test nuclear-data paths
+        run: |
+          mkdir -p "$RUNNER_TEMP/nuclear_data/endf-b8.1"
+          printf '%s\n' "$RUNNER_TEMP/nuclear_data" > data_root.txt
       - name: Check shared configuration outside the checkout
         working-directory: ${{ runner.temp }}
         run: |
           python - <<'PY'
           from openmc_workbench_config import DATA_ROOT, ENDF_B81
+
           assert DATA_ROOT.is_absolute()
+          assert DATA_ROOT.is_dir()
           assert ENDF_B81 == DATA_ROOT / 'endf-b8.1'
+          assert ENDF_B81.is_dir()
+
           print('Shared configuration imports outside the repository:', ENDF_B81)
           PY
       - name: Check generated structures

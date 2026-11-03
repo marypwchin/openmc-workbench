@@ -1,41 +1,47 @@
-# Python version of openmc_nuclear_data_setup.ipynb.
-# Install the shared module first: python -m pip install -e /absolute/path/to/openmc-workbench
-# Configure DATA_ROOT in openmc_workbench_config.py; edit APPLY and LOCAL_ARCHIVES below.
+#!/usr/bin/env python
+# coding: utf-8
 
-# %% [markdown]
 # # Set up OpenMC nuclear data
-#
-# **Notebook outline**
+# 
+# <!-- index:description -->
+# Install nuclear-data libraries, windowed multipole data, and depletion chains; check the resulting file layout.
+# <!-- /index:description -->
+# 
+# <!-- generated:structure -->
 # ```text
 # Set up OpenMC nuclear data
-# ├── Intended directory layout
+# ├── Disk-space requirements
+# ├── Expected directory structure
 # ├── Sources
-# ├── Download, extraction, and path handling
+# ├── Downloads and extracted files
 # ├── 1. Install the preprocessed HDF5 libraries
 # ├── 2. Convert FENDL-3.2c neutron ACE data
 # ├── 3. Install WMP data
 # ├── 4. Install depletion chains
-# └── 5. Check the installed layout
+# └── 5. Check the installed files
 # ```
-#
-# Populate the directory layout below with published HDF5 libraries, WMP data, and depletion chains. The [OpenMC download page](https://openmc.org/data/) lists preprocessed HDF5 data for FENDL-3.2, but not FENDL-3.2c; for the latter, convert the IAEA neutron ACE archive to OpenMC HDF5 format. This directory layout will be used in subsequent notebooks.
-#
-# This notebook starts with no nuclear-data files downloaded. Run it in a Jupyter environment containing OpenMC and `tqdm` (`%pip install tqdm` if needed). Progress bars show elapsed time and, when the total is known, estimated time remaining. Downloads can require several GB per library.
-#
-# Before running the installation:
-#
-# 1. Download **FENDL-3.2c → Neutron → ACE** from [IAEA](https://nds.iaea.org/fendl/) and save the ZIP in `~/Downloads/`. Set `LOCAL_ARCHIVES["fendl-3.2c"]` below to the saved filename. This archive is downloaded manually; the notebook converts it to HDF5.
-# 2. Leave the other `LOCAL_ARCHIVES` values as `None`. The notebook downloads those HDF5 and WMP archives, and the depletion chains, automatically when installation is enabled.
-# 3. Run with `APPLY = False` to preview the steps, then set `APPLY = True` and rerun to create the directories and install the data.
-#
-# Existing indexed libraries are skipped if the notebook is run again.
-#
+# <!-- /generated:structure -->
+# 
+# This notebook installs nuclear-data libraries for use with OpenMC. The libraries reside outside the repository, in the directory specified by `data_root.txt`. Before running the notebook, follow the [Nuclear-data paths](../README.md#nuclear-data-paths) instructions to set that directory and make `openmc_workbench_config` available in your Jupyter Python environment. You will also need OpenMC and `tqdm` (`%pip install tqdm` if needed).
+# 
+# A standalone alternative, [0_0_set_up_nuclear_data.py](0_0_set_up_nuclear_data.py), is exported from this notebook. **Run either the notebook or the Python script, not both.**
+# 
+# The installation includes preprocessed HDF5 libraries, windowed multipole (WMP) data, and fast-spectrum depletion chains. FENDL-3.2c requires an additional step: its neutron ACE files are converted to OpenMC HDF5 format. The published [OpenMC nuclear-data page](https://openmc.org/data/) offers FENDL-3.2 data, which is different from FENDL-3.2c.
+# 
+# Before starting:
+# 
+# 1. Review the disk-space requirements below. Downloaded archives can expand to much larger files.
+# 2. Download **FENDL-3.2c → Neutron → ACE** from the [IAEA](https://www-nds.iaea.org/fendl/) and save the ZIP file locally. Set `LOCAL_ARCHIVES["fendl-3.2c"]` in the code below to its path. Other entries can remain `None` for automatic downloads.
+# 3. Run once with `APPLY = False` to see the planned downloads and conversions. Set `APPLY = True` and rerun to install the files.
+# 
+# Libraries that already have a `cross_sections.xml` index are skipped. Downloads and conversions may take considerable time; progress bars show download and checksum progress.
+# 
 # ## Disk-space requirements
-#
-# **Beware of file-size expansion:** compressed downloads can expand into much larger HDF5 libraries. Check available disk space before setting `APPLY = True`.
-#
-# The following approximate installed sizes were measured with `du -h` for this setup (GiB and MiB, rounded). These are planning figures, not fixed sizes for every release or filesystem.
-#
+# 
+# Compressed archives can require substantially more space once extracted. Check the available disk space before setting `APPLY = True`.
+# 
+# The following installed sizes were measured using `du -h` for this setup. They are approximate and may differ between releases or filesystems.
+# 
 # | Library or data | Installed disk space | Main contributor |
 # | --- | ---: | --- |
 # | ENDF/B-VIII.1 | 43 GiB | Thermal data: 37 GiB |
@@ -44,16 +50,18 @@
 # | FENDL-3.2c | 907 MiB | Neutron HDF5 files |
 # | WMP v1.1 | 16 MiB | WMP HDF5 files |
 # | Depletion chains | 123 MiB | XML files |
-#
-# Allow approximately **126 GiB for the installed data alone**, plus additional space for retained archives in `_downloads/` and extraction files in `_staging/`. The FENDL ACE files remain in staging alongside the converted HDF5 files. Peak installation space therefore exceeds the installed total; archive and staging sizes are not included in the table. Existing ENDF/B-VIII.0 data, if retained from an earlier installation, consumes additional space and is excluded from this total.
-#
-# The notebook does not automatically delete downloads or staging files. Remove them manually only after checking the installation.
+# 
+# Allow approximately **126 GiB for the installed data**, plus space for downloaded archives in `_downloads/` and extracted files in `_staging/`. The converted FENDL HDF5 files are installed separately, while the original ACE files remain in staging. The highest disk-space use during installation will therefore exceed the table total. Any pre-existing ENDF/B-VIII.0 files also require additional space.
+# 
+# The notebook does not delete downloaded archives or staging files automatically. Remove them only after checking the installation.
+# 
 
-# %% [markdown]
-# ## Intended directory layout
-#
+# ## Expected directory structure
+# 
+# The nuclear-data directory specified by `data_root.txt` will contain the following folders:
+# 
 # ```text
-# ~/data/
+# DATA_ROOT/
 # ├── endf-b8.1/
 # │   ├── cross_sections.xml
 # │   ├── neutron/
@@ -78,13 +86,16 @@
 # │   ├── chain-endf-b8.1-fast.xml
 # │   ├── chain-jeff-4-fast.xml
 # │   └── chain-jendl-5-fast.xml
-# ├── _downloads/    # temporary archive downloads; optional to retain
-# └── _staging/      # temporary archive extraction
+# ├── _downloads/    # downloaded archives; may be retained
+# └── _staging/      # extracted archives; may be removed after checking
 # ```
-#
-# WMP and depletion chains are kept separate from transport libraries. Archive contents determine the available neutron, photon and thermal subdirectories.
+# 
+# WMP data and depletion chains are kept separate from the neutron, photon, and thermal libraries. The available subdirectories depend on the contents of each published archive.
+# 
 
-# %%
+# In[ ]:
+
+
 from pathlib import Path
 import hashlib
 import json
@@ -117,16 +128,19 @@ EXPECTED_SHA256 = {}
 print("Data directory:", ROOT)
 print("Install data:", APPLY)
 
-# %% [markdown]
-# ## Sources
-#
-# HDF5 archives and fast-spectrum depletion chains are linked from [OpenMC Cross Sections](https://openmc.org/data/). If a download is blocked, download the archive in a browser and set its path in `LOCAL_ARCHIVES`.
-#
-# Download **FENDL-3.2c → Neutron → ACE** from [IAEA](https://nds.iaea.org/fendl/), then set the local ZIP path above. This is neutron-only data at the supplied temperature; it is different from FENDL-3.2.
-#
-# WMP v1.1 comes from the [MIT WMP Library release](https://github.com/mit-crpg/WMP_Library/releases/tag/v1.1). Select WMP and depletion chains separately when using them in a simulation.
 
-# %%
+# ## Sources
+# 
+# The preprocessed HDF5 libraries and fast-spectrum depletion chains are available from [OpenMC nuclear data](https://openmc.org/data/). If a download is blocked, save the archive using a browser and enter its location in `LOCAL_ARCHIVES`.
+# 
+# Download **FENDL-3.2c → Neutron → ACE** from the [IAEA FENDL page](https://nds.iaea.org/fendl/), then enter the saved ZIP path in `LOCAL_ARCHIVES`. This archive contains neutron ACE data at the supplied temperature; it is not the FENDL-3.2 HDF5 library.
+# 
+# WMP v1.1 is available from the [MIT WMP Library release](https://github.com/mit-crpg/WMP_Library/releases/tag/v1.1). WMP data and depletion chains are selected separately when preparing an OpenMC calculation.
+# 
+
+# In[ ]:
+
+
 # Published archive links from openmc.org/data/.
 HDF5_URLS = {
     "endf-b8.1": "https://anl.box.com/shared/static/6qr7jezzihkj9p9esl5jn19qgpujyjyz.xz",
@@ -142,20 +156,26 @@ CHAIN_URLS = {
     "chain-jendl-5-fast.xml": "https://anl.box.com/shared/static/yw4bsaf86d1vhva42wzurwstlp1ynhe5.xml",
 }
 
-# %% [markdown]
-# ## Download, extraction, and path handling
-#
-# Archives are unpacked into `_staging/` before being placed in the layout. Existing destination directories are preserved. The notebook does not automatically remove `_staging/` after installation. After the installed layout has been checked, any remaining staging files can be deleted manually to reclaim disk space. If installation fails, keep them for inspection.
-#
-# Before extraction or copying, SHA-256 hashes are compared with `EXPECTED_SHA256` when a trusted publisher checksum has been supplied. A mismatch stops installation. No reference checksums are preconfigured; without one, the hash is **recorded, not verified**. Records are saved to `_downloads/sha256.json` to identify the input files used. This also applies to local archives, including the manually downloaded FENDL ZIP. Already installed libraries are skipped without rechecking their source archives.
 
-# %%
+# ## Downloads and extracted files
+# 
+# Archives are extracted into `_staging/`, then the installed data are placed in their final directories. Existing installation directories are not overwritten. The notebook retains the staging files so that incomplete installations can be inspected. After checking the installed files, you may remove staging files to recover disk space.
+# 
+# If a published SHA-256 checksum is entered in `EXPECTED_SHA256`, the notebook compares it with the downloaded or local archive and stops if it differs. Without a published reference checksum, the calculated value is **recorded but not verified**. Values are saved in `_downloads/sha256.json`. Libraries already installed are skipped without checking their original archives again.
+# 
+
+# In[ ]:
+
+
 def check_sha256(key, path):
     """Verify against a supplied reference, or record the hash without verification."""
     digest = hashlib.sha256()
     with Path(path).open("rb") as stream, tqdm(
-        total=Path(path).stat().st_size, desc=f"SHA-256 {key}",
-        unit="B", unit_scale=True, unit_divisor=1024
+        total=Path(path).stat().st_size,
+        desc=f"SHA-256 {key}",
+        unit="B",
+        unit_scale=True,
+        unit_divisor=1024,
     ) as progress:
         for block in iter(lambda: stream.read(2**20), b""):
             digest.update(block)
@@ -172,11 +192,14 @@ def check_sha256(key, path):
     print(f"{key}: SHA-256 {actual} ({status})")
     manifest = ROOT / "_downloads" / "sha256.json"
     records = json.loads(manifest.read_text()) if manifest.is_file() else {}
-    records[key] = {"path": str(Path(path).resolve()), "sha256": actual,
-                    "status": status, "expected_sha256": expected}
+    records[key] = {
+        "path": str(Path(path).resolve()),
+        "sha256": actual,
+        "status": status,
+        "expected_sha256": expected,
+    }
     manifest.parent.mkdir(parents=True, exist_ok=True)
     manifest.write_text(json.dumps(records, indent=2) + "\n")
-
 
 def download(key, url):
     local = LOCAL_ARCHIVES.get(key)
@@ -193,15 +216,19 @@ def download(key, url):
         with urllib.request.urlopen(request, timeout=120) as response, partial.open("wb") as output:
             length = response.headers.get("Content-Length")
             total = int(length) if length and length.isdigit() else None
-            with tqdm(total=total, desc=f"Download {key}", unit="B",
-                      unit_scale=True, unit_divisor=1024) as progress:
+            with tqdm(
+                total=total,
+                desc=f"Download {key}",
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+            ) as progress:
                 for block in iter(lambda: response.read(2**20), b""):
                     output.write(block)
                     progress.update(len(block))
         partial.replace(archive)
     check_sha256(key, archive)
     return archive
-
 
 def unpack(archive, name):
     stage = ROOT / "_staging" / name
@@ -226,7 +253,6 @@ def unpack(archive, name):
             tf.extractall(stage, filter="data")
     return stage
 
-
 def normalize_index(index):
     # Keep paths relative so the complete data directory can be relocated.
     tree = ET.parse(index)
@@ -248,10 +274,15 @@ def normalize_index(index):
     ET.indent(tree, space="  ")
     tree.write(index, encoding="utf-8", xml_declaration=True)
 
-# %% [markdown]
-# ## 1. Install the preprocessed HDF5 libraries
 
-# %%
+# ## 1. Install the preprocessed HDF5 libraries
+# 
+# The ENDF/B-VIII.1, JEFF-4.0, and JENDL-5 archives already contain HDF5 files for OpenMC. This step downloads and installs them; it does not process raw evaluated nuclear data.
+# 
+
+# In[ ]:
+
+
 for key, url in HDF5_URLS.items():
     destination = ROOT / key
     if (destination / "cross_sections.xml").is_file():
@@ -270,16 +301,19 @@ for key, url in HDF5_URLS.items():
     shutil.move(str(indexes[0].parent), str(destination))
     print("Installed", destination)
 
-# %% [markdown]
-# ## 2. Convert FENDL-3.2c neutron ACE data
-#
-# Import processed ACE directly with OpenMC; this step does not process raw ENDF data. Conversion stops on an error. A failed run may leave a partial directory; inspect it before retrying.
-#
-# Some FENDL ZIP archives use Deflate64 compression, which Python’s `zipfile` cannot extract. The notebook falls back to the command-line `unzip` utility.
-#
-# The IAEA archive stores extensionless ACE tables in `neutron/ace/`; the accompanying `.xsd` files are metadata and are excluded. A previous extraction is reused if its file inventory and sizes match the ZIP.
 
-# %%
+# ## 2. Convert FENDL-3.2c neutron ACE data
+# 
+# OpenMC reads the processed ACE tables and converts them to HDF5. This is not a conversion from raw ENDF files. If an error stops the conversion, a partial directory may remain and should be inspected before trying again.
+# 
+# Some FENDL ZIP archives use Deflate64 compression, which Python's `zipfile` cannot extract. In that case, the notebook uses the command-line `unzip` utility.
+# 
+# The IAEA archive stores ACE tables without filename extensions under `neutron/ace/`. The `.xsd` files contain metadata and are not converted. An earlier extraction is reused only if its file list and file sizes match those in the ZIP archive.
+# 
+
+# In[ ]:
+
+
 destination = ROOT / "fendl-3.2c"
 if (destination / "cross_sections.xml").is_file():
     print("FENDL-3.2c already installed")
@@ -326,10 +360,15 @@ else:
     normalize_index(destination / "cross_sections.xml")
     print("Converted", len(ace_files), "ACE files")
 
-# %% [markdown]
-# ## 3. Install WMP data
 
-# %%
+# ## 3. Install WMP data
+# 
+# WMP v1.1 is installed separately from the cross-section libraries. The files are placed under `wmp/WMP_Library/`.
+# 
+
+# In[ ]:
+
+
 destination = ROOT / "wmp" / "WMP_Library"
 if destination.is_dir() and any(destination.rglob("*.h5")):
     print("WMP already installed")
@@ -347,12 +386,15 @@ else:
         shutil.move(str(folders[0]), str(destination))
         print("Installed", destination)
 
-# %% [markdown]
-# ## 4. Install depletion chains
-#
-# These are the published fast-spectrum versions. Chain selection depends on the simulation; the files are separate from `cross_sections.xml`.
 
-# %%
+# ## 4. Install depletion chains
+# 
+# This step installs the published fast-spectrum depletion chains under `chains/`. The chain used in a calculation depends on the model and nuclear-data library. Chain files are separate from `cross_sections.xml`.
+# 
+
+# In[ ]:
+
+
 for name, url in CHAIN_URLS.items():
     destination = ROOT / "chains" / name
     if destination.is_file():
@@ -367,14 +409,17 @@ for name, url in CHAIN_URLS.items():
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(archive, destination)
 
-# %% [markdown]
-# ## 5. Check the installed layout
-#
-# Check that the indexes and their referenced files exist. This is a file check, not validation of the nuclear data.
-#
-# In subsequent notebooks, import `ENDF_B81` from `openmc_workbench_config` to locate the ENDF/B-VIII.1 library. All notebooks share `DATA_ROOT` from that module, independently of the notebook working directory.
 
-# %%
+# ## 5. Check the installed files
+# 
+# This final step checks that each installed `cross_sections.xml` index contains entries and that its referenced files exist. It also lists the WMP HDF5 files and depletion-chain files found. These are **file checks**, not validation of the nuclear data or physical results.
+# 
+# Subsequent notebooks can import paths such as `ENDF_B81` from `openmc_workbench_config`. The names are discovered from the directories under `DATA_ROOT` when the configuration module is imported.
+# 
+
+# In[ ]:
+
+
 for key in (*HDF5_URLS, "fendl-3.2c"):
     index = ROOT / key / "cross_sections.xml"
     if not index.is_file():
@@ -389,3 +434,4 @@ for key in (*HDF5_URLS, "fendl-3.2c"):
 
 print("WMP HDF5 files:", len(list((ROOT / "wmp").rglob("*.h5"))))
 print("Chain files:", [p.name for p in sorted((ROOT / "chains").glob("*.xml"))])
+
