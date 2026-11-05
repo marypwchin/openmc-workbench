@@ -6,7 +6,7 @@
  *     -o cross_sections_xml_pugixml
  *
  * Compiler options:
- *   -std=c++17           Enable C++17, required for std::filesystem.
+ *   -std=c++23           Enable C++23, required for std::filesystem.
  *   -I/opt/local/include Locate pugixml.hpp (MacPorts-specific).
  *   -L/opt/local/lib     Locate the pugixml library (MacPorts-specific).
  *   -lpugixml            Link against pugixml.

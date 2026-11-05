@@ -18,7 +18,8 @@ The main files are listed below. Paths are relative to the repository root.
 | [data_root.example.txt](../data_root.example.txt) | Example to copy when creating `data_root.txt`. |
 | `openmc_workbench_config.hpp` | Generated C++ header containing the same nuclear-data directory names; not committed to Git. |
 | [scripts/update_structure.py](../scripts/update_structure.py) | Updates notebook outlines, the exploration lists in `README.md` and `index.md`, and text shared between those pages. |
-| [scripts/check_notebooks.py](../scripts/check_notebooks.py) | Checks notebook file structure without running notebook cells. |
+| [scripts/openmc_api_index.py](../scripts/openmc_api_index.py) | Finds documented OpenMC API calls in `.ipynb` and `.py` files. |
+| [scripts/check_notebooks.py](../scripts/check_notebooks.py) | Checks notebook file structure. |
 | [scripts/check_links.py](../scripts/check_links.py) | Checks links to files in the repository and collects external links for checking online. |
 | [.gitignore](../.gitignore) | Keeps local data paths, generated files, environments, and other unwanted files out of normal Git staging. |
 
@@ -41,12 +42,16 @@ Directory names such as `endf-b8.1` and `fendl-3.2c` become `ENDF_B81` and `FEND
 
 The script also updates two views of the explorations:
 
-- `README.md` shows a directory tree of numbered `.ipynb`, `.py`, and `.cpp` files in the numbered subject directories. Repository helper scripts and auxiliary files are excluded.
-- `index.md` shows a **File | What it covers** table with the filenames as links. Notebooks link to their MyST pages; Python and C++ source files link to GitHub.
+- `README.md` presents **Explorations** first as a directory tree of numbered `.ipynb`, `.py`, and `.cpp` files, then **Nuts and bolts** with the working details. Repository helper scripts and auxiliary files are excluded from the tree.
+- `index.md` presents **Nuts and bolts** first, then **Explorations** grouped by numbered subdirectory, with headings such as **Nuclear data** and **First simulations**. Each table has **File | What it covers | OpenMC API** columns. Notebooks link to their MyST pages; Python and C++ source files link to GitHub. The last column lists recognized OpenMC constructors, functions, and methods with documentation links; a dash means none were recognized.
 
 Notebook descriptions are taken from the marked description in each notebook's first Markdown title cell. Descriptions of `.py` and `.cpp` files can be edited in the `index.md` table; the script retains them on later runs. New source files initially show `Description to be added.`
 
-The **title, introduction, nuclear-data path instructions, and status** are maintained in `README.md` and copied into `index.md`. Edit this common text in `README.md`, not `index.md`. The logo, badges, and **Read online** link belong only to `README.md`; the source-repository link and exploration table belong only to `index.md`.
+`scripts/openmc_api_index.py` reads Python notebook cells and scripts without executing them. Its list of recognized OpenMC calls includes material and geometry APIs, and can be extended as needed. It does not interpret C++ code or infer every possible call through dynamically created objects.
+
+The **title, introduction, nuclear-data path instructions, and status** are maintained in `README.md` and copied into `index.md`. The **Python and C++** and **Programmatic approach** subsections under **Nuts and bolts**, including their code examples, are also copied from `README.md` into the `generated:exploration-notes` block of `index.md`. Edit this material in `README.md`, not `index.md`. The logo, badges, and documentation link belong only to `README.md`; the source-repository link and exploration tables belong only to `index.md`.
+
+The generator expects `generated:structure` under **Explorations** in `README.md`; `generated:exploration-notes` under **Nuts and bolts** and `generated:notebooks` under **Explorations** in `index.md`. Missing or misplaced headings and markers produce an error rather than an automatic layout conversion. The one-time heading reorganization belongs in the separate `one_off/nuts_and_bolts_layout.py` script; it is not part of routine automation.
 
 The file list comes from Git: it includes tracked files and new files that are not ignored. Empty directories, checkpoints, virtual environments, and caches are omitted. Add unwanted local files or large data directories to `.gitignore`.
 
@@ -72,7 +77,7 @@ python3 scripts/update_structure.py --pages-only --check
 
 `--check` reports files that need updating but does not change them. A normal second run should produce no further changes. `--readme-only` updates `README.md` without updating `index.md`; use `--pages-only` when both pages need to remain synchronized.
 
-Run the script after adding, moving, or renaming exploration files; changing notebook headings or descriptions; or editing shared README text. Check descriptions in `index.md` for new or renamed `.py` and `.cpp` files.
+Run the script after adding, moving, or renaming exploration files; changing notebook headings or descriptions; or editing shared README text, including the **Nuts and bolts** subsections. Check descriptions in `index.md` for new or renamed `.py` and `.cpp` files.
 
 ## 3. Set up checks before committing
 

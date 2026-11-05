@@ -13,9 +13,13 @@ project:
     - title: Cross sections
       children:
         - pattern: 1_cross_sections/*.ipynb
-    - title: First simulations
+    - title: Materials
       children:
-        - pattern: 2_first_simulations/*.ipynb
+        - pattern: 2_materials/*.ipynb
+    - title: Run
+      children:
+        - pattern: 3_run/*.ipynb
+    - file: docs/compilers_and_libraries.md
 site:
   template: book-theme
   options:

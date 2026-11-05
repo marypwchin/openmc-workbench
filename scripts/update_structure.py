@@ -5,6 +5,8 @@ import re
 import subprocess
 from pathlib import Path
 
+from openmc_api_index import openmc_methods
+
 ROOT = Path(__file__).resolve().parents[1]
 START = '<!-- generated:structure -->'
 END = '<!-- /generated:structure -->'
@@ -12,6 +14,8 @@ DESC_START = '<!-- index:description -->'
 DESC_END = '<!-- /index:description -->'
 INDEX_START = '<!-- generated:notebooks -->'
 INDEX_END = '<!-- /generated:notebooks -->'
+NOTES_START = '<!-- generated:exploration-notes -->'
+NOTES_END = '<!-- /generated:exploration-notes -->'
 EXPLORATION_SUFFIXES = {'.ipynb', '.py', '.cpp'}
 
 
@@ -89,8 +93,6 @@ def notebook_text(path):
         if cell['cell_type'] == 'markdown':
             text = source(cell)
             text = re.sub(re.escape(START) + r'.*?' + re.escape(END) + r'\n*', '', text, flags=re.S)
-            # Migrate the existing hand-written outline in this repository.
-            text = re.sub(r'\*\*Notebook outline\*\*\n```text\n.*?```\n*', '', text, flags=re.S)
             cell['source'] = text.splitlines(keepends=True)
     title_cell = None
     title = None
@@ -178,13 +180,18 @@ def readme_text(paths):
     selected = exploration_paths(paths)
     generated = START + '\n' + render_tree(selected) + '\n' + END
     text = (ROOT / 'README.md').read_text(encoding='utf-8')
-    text = re.sub(r'(?m)^## Notebooks$', '## Explorations', text)
-    if START in text:
-        return re.sub(re.escape(START) + r'.*?' + re.escape(END), lambda _: generated, text, flags=re.S)
-    pattern = r'(## (?:Repository structure|Notebooks|Explorations)\s*\n)```text\n.*?```'
-    text, count = re.subn(pattern, lambda m: m[1] + generated, text, count=1, flags=re.S)
+    explorations = re.search(r'(?m)^## Explorations[ \t]*$', text)
+    nuts_and_bolts = re.search(r'(?m)^## Nuts and bolts[ \t]*$', text)
+    if explorations is None or nuts_and_bolts is None or explorations.start() >= nuts_and_bolts.start():
+        raise ValueError('README.md needs ## Explorations before ## Nuts and bolts')
+    if (text.count(START) != 1 or text.count(END) != 1
+            or not (explorations.end() < text.index(START)
+                    < text.index(END) < nuts_and_bolts.start())):
+        raise ValueError('README.md needs generated:structure under ## Explorations')
+    pattern = re.escape(START) + r'.*?' + re.escape(END)
+    text, count = re.subn(pattern, lambda _: generated, text, flags=re.S)
     if count != 1:
-        raise ValueError('README needs an Explorations heading followed by a text fence')
+        raise ValueError('README.md needs exactly one complete generated:structure block')
     return text
 
 
@@ -246,6 +253,33 @@ def shared_block(text, name):
     return match.group(1)
 
 
+def exploration_notes(readme):
+    """Copy the two Nuts and bolts subsections from README.md."""
+    explorations = re.search(r'(?m)^## Explorations[ \t]*$', readme)
+    nuts_and_bolts = re.search(r'(?m)^## Nuts and bolts[ \t]*$', readme)
+    if (explorations is None or nuts_and_bolts is None
+            or explorations.start() >= nuts_and_bolts.start()):
+        raise ValueError('README.md needs ## Explorations before ## Nuts and bolts')
+
+    following = re.search(r'(?m)^## [^\n]+$', readme[nuts_and_bolts.end():])
+    end = nuts_and_bolts.end() + following.start() if following else len(readme)
+    content = readme[nuts_and_bolts.end():end]
+    headings = list(re.finditer(r'(?m)^### ([^\n]+?)[ \t]*$', content))
+    subsections = {}
+    for i, heading in enumerate(headings):
+        stop = headings[i + 1].start() if i + 1 < len(headings) else len(content)
+        name = heading[1].strip()
+        if name in subsections:
+            raise ValueError(f'Duplicate ### {name} subsection in README.md')
+        subsections[name] = content[heading.start():stop].strip()
+
+    names = ('Python and C++', 'Programmatic approach')
+    for name in names:
+        if name not in subsections:
+            raise ValueError(f'README.md needs a ### {name} subsection under ## Nuts and bolts')
+    return '\n\n'.join(subsections[name] for name in names)
+
+
 def code_url(path):
     """Link source files to GitHub so they also open from the MyST website."""
     myst = (ROOT / 'myst.yml').read_text(encoding='utf-8')
@@ -263,9 +297,13 @@ def index_text(paths, readme):
     text, n = re.subn(r'^# .+$', lambda _: title.group(), text, count=1, flags=re.M)
     if n != 1:
         raise ValueError('index.md needs a top-level title')
-    text = re.sub(r'(?m)^## Notebooks$', '## Explorations', text)
+    nuts_and_bolts = re.search(r'(?m)^## Nuts and bolts[ \t]*$', text)
+    explorations = re.search(r'(?m)^## Explorations[ \t]*$', text)
+    if (nuts_and_bolts is None or explorations is None
+            or nuts_and_bolts.start() >= explorations.start()):
+        raise ValueError('index.md needs ## Nuts and bolts before ## Explorations')
 
-    for section in ('introduction', 'data', 'status'):
+    for section in ('introduction', 'data', 'compilers', 'status'):
         content = shared_block(readme, section)
         pattern = (r'<!-- shared:' + re.escape(section)
                    + r' -->\n.*?\n<!-- /shared:' + re.escape(section) + r' -->')
@@ -280,10 +318,12 @@ def index_text(paths, readme):
     if not match:
         raise ValueError('Missing generated:notebooks table in index.md')
 
-    # Keep existing descriptions for Python/C++ files, but always display
-    # the real filename for every exploration, including notebooks.
+    # Keep existing descriptions for Python/C++ files, even when the generated
+    # tables already have an OpenMC API column.
     previous_descriptions = {}
-    row_pattern = r'^\| \[(.*?)\]\(([^)]+)\) \| (.*?) \|$'
+    if '| File | What it covers | OpenMC API |' not in match[1]:
+        raise ValueError('index.md needs generated three-column OpenMC API tables')
+    row_pattern = r'^\| \[(.*?)\]\(([^)]+)\) \| (.*?) \| .*? \|$'
     for _label, url, description in re.findall(row_pattern, match[1], flags=re.M):
         previous_descriptions[url] = description
 
@@ -292,8 +332,22 @@ def index_text(paths, readme):
     published_notebooks = set(notebook_pages())
     selected = [path for path in exploration_paths(paths)
                 if not path.endswith('.ipynb') or path in published_notebooks]
-    lines = ['| File | What it covers |', '| --- | --- |']
+    lines = []
+    directory = None
     for path in selected:
+        subdirectory = Path(path).parts[0]
+        if subdirectory != directory:
+            directory = subdirectory
+            heading = re.sub(r'^\d+_', '', directory).replace('_', ' ').capitalize()
+            if lines:
+                lines.append('')
+            lines.extend([
+                f'### {heading}',
+                '',
+                '| File | What it covers | OpenMC API |',
+                '| --- | --- | --- |',
+            ])
+
         label = f'`{Path(path).name}`'
         if path.endswith('.ipynb'):
             _title, description = notebook_details(ROOT / path)
@@ -305,10 +359,31 @@ def index_text(paths, readme):
                 description = 'Description to be added.'
                 print(f'Add a description for {path} in index.md')
         description = description.replace('|', r'\|') if path.endswith('.ipynb') else description
-        lines.append(f'| [{label}]({url}) | {description} |')
+        methods = openmc_methods(ROOT / path)
+        lines.append(f'| [{label}]({url}) | {description} | {methods} |')
 
     generated = INDEX_START + '\n' + '\n'.join(lines) + '\n' + INDEX_END
-    return re.sub(pattern, lambda _: generated, text, count=1, flags=re.S)
+    text = re.sub(pattern, lambda _: generated, text, count=1, flags=re.S)
+
+    # The notes belong under Nuts and bolts; the tables belong under Explorations.
+    nuts_and_bolts = re.search(r'(?m)^## Nuts and bolts[ \t]*$', text)
+    explorations = re.search(r'(?m)^## Explorations[ \t]*$', text)
+    if (text.count(NOTES_START) != 1 or text.count(NOTES_END) != 1
+            or text.count(INDEX_START) != 1 or text.count(INDEX_END) != 1
+            or nuts_and_bolts is None or explorations is None
+            or not (nuts_and_bolts.end() < text.index(NOTES_START)
+                    < text.index(NOTES_END) < explorations.start()
+                    < text.index(INDEX_START) < text.index(INDEX_END))):
+        raise ValueError(
+            'index.md needs generated:exploration-notes under ## Nuts and bolts '
+            'and generated:notebooks under ## Explorations'
+        )
+    notes = NOTES_START + '\n' + exploration_notes(readme) + '\n' + NOTES_END
+    notes_pattern = re.escape(NOTES_START) + r'.*?' + re.escape(NOTES_END)
+    text, count = re.subn(notes_pattern, lambda _: notes, text, count=1, flags=re.S)
+    if count != 1:
+        raise ValueError('index.md needs a complete generated:exploration-notes block')
+    return text
 
 
 def main():
@@ -325,7 +400,7 @@ def main():
     updates = [] if (args.readme_only or args.pages_only) else ([(ROOT / p, notebook_text(ROOT / p)) for p in paths if p.endswith('.ipynb')])
     readme = readme_text(paths)
     updates.append((ROOT / 'README.md', readme))
-    if not getattr(args, 'readme_only', False):
+    if not args.readme_only:
         updates.append((ROOT / 'index.md', index_text(paths, readme)))
 
     stale = False
