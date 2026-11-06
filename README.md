@@ -38,7 +38,8 @@ By Mary P. W. Chin
 ├── 2_materials/
 │   └── 2_0_ways_to_define_materials.ipynb
 └── 3_run/
-    └── 3_0_tritium_breeding_and_neutron_fluence_maps.ipynb
+    ├── 3_0_tritium_breeding_and_neutron_fluence_maps.ipynb
+    └── 3_1_ways_to_run_and_post_process.ipynb
 ```
 <!-- /generated:structure -->
 

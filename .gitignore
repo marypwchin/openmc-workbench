@@ -13,7 +13,7 @@ _build/
 **/statepoint.*.h5
 **/summary.h5
 **/tallies.out
-output/
+output*/
 data_root.txt
 openmc_workbench_config.hpp
 a.out
