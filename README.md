@@ -20,6 +20,16 @@ By Mary P. W. Chin
 
 [**Read online →**](https://marypwchin.github.io/openmc-workbench/)
 
+## Status
+
+<!-- shared:status -->
+This is an active, evolving workbench. Code, documentation, and analyses will be added and revised as the work progresses.
+
+The repository is public in the spirit of open-source collaboration and scientific exchange. Efforts are made to document the behind-the-scenes work, including data preparation, configuration, and computational setup, for transparency and reproducibility.
+
+The workbench is a record of ongoing explorations rather than a software product designed for end users. Comments, corrections, and peer review are welcome.
+<!-- /shared:status -->
+
 ## Explorations
 
 <!-- generated:structure -->
@@ -149,9 +159,3 @@ This arrangement allows Python notebooks and C++ programs to use the same nuclea
 <!-- shared:compilers -->
 See [docs/compilers_and_libraries.md](docs/compilers_and_libraries.md).
 <!-- /shared:compilers -->
-
-## Status
-
-<!-- shared:status -->
-This is an active, evolving workbench. Code, documentation, and analyses will be added and revised as the work progresses.
-<!-- /shared:status -->
