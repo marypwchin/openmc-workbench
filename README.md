@@ -27,7 +27,7 @@ This is an active, evolving workbench. Code, documentation, and analyses will be
 
 The repository is public in the spirit of open-source collaboration and scientific exchange. Efforts are made to document the behind-the-scenes work, including data preparation, configuration, and computational setup, for transparency and reproducibility.
 
-The workbench is a record of ongoing explorations rather than a software product designed for end users. Comments, corrections, and peer review are welcome.
+The workbench is a record of ongoing explorations rather than an end-user tutorial. Comments, corrections, and peer review are welcome.
 <!-- /shared:status -->
 
 ## Explorations
@@ -47,9 +47,11 @@ The workbench is a record of ongoing explorations rather than a software product
 │   └── 1_0_ways_to_plot.ipynb
 ├── 2_materials/
 │   └── 2_0_ways_to_define_materials.ipynb
-└── 3_run/
-    ├── 3_0_breeder_tritium_neutron_maps.ipynb
-    └── 3_1_ways_to_run_and_post_process.ipynb
+├── 3_geometry/
+│   └── 3_0_ways_to_build_pacman_maze.ipynb
+└── 4_run/
+    ├── 4_0_breeder_tritium_neutron_maps.ipynb
+    └── 4_1_ways_to_run_and_post_process.ipynb
 ```
 <!-- /generated:structure -->
 

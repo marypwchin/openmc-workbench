@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<geometry>
+  <cell id="31" name="OPEN_CSG" material="void" region="100 -128 200 -231 302 -303 ((101 -113 229 -230) | (115 -127 229 -230) | (101 -102 226 -229) | (106 -107 226 -229) | (112 -113 226 -229) | (115 -116 226 -229) | (121 -122 226 -229) | (126 -127 226 -229) | (101 -127 225 -226) | (101 -102 223 -225) | (106 -107 223 -225) | (109 -110 223 -225) | (118 -119 223 -225) | (121 -122 223 -225) | (126 -127 223 -225) | (101 -107 222 -223) | (109 -113 222 -223) | (115 -119 222 -223) | (121 -127 222 -223) | (112 -113 220 -222) | (115 -116 220 -222) | (109 -119 219 -220) | (100 -105 218 -221) | (113 -115 218 -219) | (123 -128 218 -221) | (106 -107 217 -222) | (109 -110 217 -219) | (118 -119 217 -219) | (121 -122 217 -222) | (100 -110 216 -217) | (118 -128 216 -217) | (111 -117 215 -218) | (109 -110 214 -216) | (118 -119 214 -216) | (109 -119 213 -214) | (100 -105 212 -215) | (123 -128 212 -215) | (106 -107 211 -216) | (109 -110 211 -213) | (118 -119 211 -213) | (121 -122 211 -216) | (101 -113 210 -211) | (115 -127 210 -211) | (101 -102 208 -210) | (106 -107 208 -210) | (112 -113 208 -210) | (115 -116 208 -210) | (121 -122 208 -210) | (126 -127 208 -210) | (101 -104 207 -208) | (106 -122 207 -208) | (124 -127 207 -208) | (103 -104 205 -207) | (106 -107 205 -207) | (109 -110 205 -207) | (118 -119 205 -207) | (121 -122 205 -207) | (124 -125 205 -207) | (101 -107 204 -205) | (109 -113 204 -205) | (115 -119 204 -205) | (121 -127 204 -205) | (101 -102 202 -204) | (112 -113 202 -204) | (115 -116 202 -204) | (126 -127 202 -204) | (101 -127 201 -202))" universe="5"/>
+  <cell id="32" name="WALL_CSG" material="void" region="100 -128 200 -231 302 -303 (-101 | 113 | -229 | 230) (-115 | 127 | -229 | 230) (-101 | 102 | -226 | 229) (-106 | 107 | -226 | 229) (-112 | 113 | -226 | 229) (-115 | 116 | -226 | 229) (-121 | 122 | -226 | 229) (-126 | 127 | -226 | 229) (-101 | 127 | -225 | 226) (-101 | 102 | -223 | 225) (-106 | 107 | -223 | 225) (-109 | 110 | -223 | 225) (-118 | 119 | -223 | 225) (-121 | 122 | -223 | 225) (-126 | 127 | -223 | 225) (-101 | 107 | -222 | 223) (-109 | 113 | -222 | 223) (-115 | 119 | -222 | 223) (-121 | 127 | -222 | 223) (-112 | 113 | -220 | 222) (-115 | 116 | -220 | 222) (-109 | 119 | -219 | 220) (-100 | 105 | -218 | 221) (-113 | 115 | -218 | 219) (-123 | 128 | -218 | 221) (-106 | 107 | -217 | 222) (-109 | 110 | -217 | 219) (-118 | 119 | -217 | 219) (-121 | 122 | -217 | 222) (-100 | 110 | -216 | 217) (-118 | 128 | -216 | 217) (-111 | 117 | -215 | 218) (-109 | 110 | -214 | 216) (-118 | 119 | -214 | 216) (-109 | 119 | -213 | 214) (-100 | 105 | -212 | 215) (-123 | 128 | -212 | 215) (-106 | 107 | -211 | 216) (-109 | 110 | -211 | 213) (-118 | 119 | -211 | 213) (-121 | 122 | -211 | 216) (-101 | 113 | -210 | 211) (-115 | 127 | -210 | 211) (-101 | 102 | -208 | 210) (-106 | 107 | -208 | 210) (-112 | 113 | -208 | 210) (-115 | 116 | -208 | 210) (-121 | 122 | -208 | 210) (-126 | 127 | -208 | 210) (-101 | 104 | -207 | 208) (-106 | 122 | -207 | 208) (-124 | 127 | -207 | 208) (-103 | 104 | -205 | 207) (-106 | 107 | -205 | 207) (-109 | 110 | -205 | 207) (-118 | 119 | -205 | 207) (-121 | 122 | -205 | 207) (-124 | 125 | -205 | 207) (-101 | 107 | -204 | 205) (-109 | 113 | -204 | 205) (-115 | 119 | -204 | 205) (-121 | 127 | -204 | 205) (-101 | 102 | -202 | 204) (-112 | 113 | -202 | 204) (-115 | 116 | -202 | 204) (-126 | 127 | -202 | 204) (-101 | 127 | -201 | 202)" universe="5"/>
+  <cell id="33" name="LOWER_SLAB" material="void" region="100 -128 200 -231 301 -302" universe="5"/>
+  <cell id="34" name="UPPER_SLAB" material="void" region="100 -128 200 -231 303 -304" universe="5"/>
+  <surface id="100" type="x-plane" boundary="vacuum" coeffs="-1400.0"/>
+  <surface id="101" type="x-plane" coeffs="-1300.0"/>
+  <surface id="102" type="x-plane" coeffs="-1200.0"/>
+  <surface id="103" type="x-plane" coeffs="-1100.0"/>
+  <surface id="104" type="x-plane" coeffs="-1000.0"/>
+  <surface id="105" type="x-plane" coeffs="-900.0"/>
+  <surface id="106" type="x-plane" coeffs="-800.0"/>
+  <surface id="107" type="x-plane" coeffs="-700.0"/>
+  <surface id="109" type="x-plane" coeffs="-500.0"/>
+  <surface id="110" type="x-plane" coeffs="-400.0"/>
+  <surface id="111" type="x-plane" coeffs="-300.0"/>
+  <surface id="112" type="x-plane" coeffs="-200.0"/>
+  <surface id="113" type="x-plane" coeffs="-100.0"/>
+  <surface id="115" type="x-plane" coeffs="100.0"/>
+  <surface id="116" type="x-plane" coeffs="200.0"/>
+  <surface id="117" type="x-plane" coeffs="300.0"/>
+  <surface id="118" type="x-plane" coeffs="400.0"/>
+  <surface id="119" type="x-plane" coeffs="500.0"/>
+  <surface id="121" type="x-plane" coeffs="700.0"/>
+  <surface id="122" type="x-plane" coeffs="800.0"/>
+  <surface id="123" type="x-plane" coeffs="900.0"/>
+  <surface id="124" type="x-plane" coeffs="1000.0"/>
+  <surface id="125" type="x-plane" coeffs="1100.0"/>
+  <surface id="126" type="x-plane" coeffs="1200.0"/>
+  <surface id="127" type="x-plane" coeffs="1300.0"/>
+  <surface id="128" type="x-plane" boundary="vacuum" coeffs="1400.0"/>
+  <surface id="200" type="y-plane" boundary="vacuum" coeffs="-1550.0"/>
+  <surface id="201" type="y-plane" coeffs="-1450.0"/>
+  <surface id="202" type="y-plane" coeffs="-1350.0"/>
+  <surface id="204" type="y-plane" coeffs="-1150.0"/>
+  <surface id="205" type="y-plane" coeffs="-1050.0"/>
+  <surface id="207" type="y-plane" coeffs="-850.0"/>
+  <surface id="208" type="y-plane" coeffs="-750.0"/>
+  <surface id="210" type="y-plane" coeffs="-550.0"/>
+  <surface id="211" type="y-plane" coeffs="-450.0"/>
+  <surface id="212" type="y-plane" coeffs="-350.0"/>
+  <surface id="213" type="y-plane" coeffs="-250.0"/>
+  <surface id="214" type="y-plane" coeffs="-150.0"/>
+  <surface id="215" type="y-plane" coeffs="-50.0"/>
+  <surface id="216" type="y-plane" coeffs="50.0"/>
+  <surface id="217" type="y-plane" coeffs="150.0"/>
+  <surface id="218" type="y-plane" coeffs="250.0"/>
+  <surface id="219" type="y-plane" coeffs="350.0"/>
+  <surface id="220" type="y-plane" coeffs="450.0"/>
+  <surface id="221" type="y-plane" coeffs="550.0"/>
+  <surface id="222" type="y-plane" coeffs="650.0"/>
+  <surface id="223" type="y-plane" coeffs="750.0"/>
+  <surface id="225" type="y-plane" coeffs="950.0"/>
+  <surface id="226" type="y-plane" coeffs="1050.0"/>
+  <surface id="229" type="y-plane" coeffs="1350.0"/>
+  <surface id="230" type="y-plane" coeffs="1450.0"/>
+  <surface id="231" type="y-plane" boundary="vacuum" coeffs="1550.0"/>
+  <surface id="301" type="z-plane" boundary="vacuum" coeffs="-300.0"/>
+  <surface id="302" type="z-plane" coeffs="-100.0"/>
+  <surface id="303" type="z-plane" coeffs="100.0"/>
+  <surface id="304" type="z-plane" boundary="vacuum" coeffs="300.0"/>
+</geometry>

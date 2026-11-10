@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<geometry>
+  <cell id="11" name="WALL_TILE" material="void" universe="2"/>
+  <cell id="12" name="OPEN_TILE" material="void" universe="3"/>
+  <cell id="21" name="LOWER_SLAB" material="void" region="100 -128 200 -231 301 -302" universe="1"/>
+  <cell id="22" name="MAZE_LATTICE" fill="4" region="100 -128 200 -231 302 -303" universe="1"/>
+  <cell id="23" name="UPPER_SLAB" material="void" region="100 -128 200 -231 303 -304" universe="1"/>
+  <lattice id="4" name="Pac-Man rectangular lattice">
+    <pitch>100.0 100.0</pitch>
+    <outer>3</outer>
+    <dimension>28 31</dimension>
+    <lower_left>-1400.0 -1550.0</lower_left>
+    <universes>
+2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
+2 3 3 3 3 3 3 3 3 3 3 3 3 2 2 3 3 3 3 3 3 3 3 3 3 3 3 2 
+2 3 2 2 2 2 3 2 2 2 2 2 3 2 2 3 2 2 2 2 2 3 2 2 2 2 3 2 
+2 3 2 2 2 2 3 2 2 2 2 2 3 2 2 3 2 2 2 2 2 3 2 2 2 2 3 2 
+2 3 2 2 2 2 3 2 2 2 2 2 3 2 2 3 2 2 2 2 2 3 2 2 2 2 3 2 
+2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 
+2 3 2 2 2 2 3 2 2 3 2 2 2 2 2 2 2 2 3 2 2 3 2 2 2 2 3 2 
+2 3 2 2 2 2 3 2 2 3 2 2 2 2 2 2 2 2 3 2 2 3 2 2 2 2 3 2 
+2 3 3 3 3 3 3 2 2 3 3 3 3 2 2 3 3 3 3 2 2 3 3 3 3 3 3 2 
+2 2 2 2 2 2 3 2 2 2 2 2 3 2 2 3 2 2 2 2 2 3 2 2 2 2 2 2 
+3 3 3 3 3 2 3 2 2 2 2 2 3 2 2 3 2 2 2 2 2 3 2 3 3 3 3 3 
+3 3 3 3 3 2 3 2 2 3 3 3 3 3 3 3 3 3 3 2 2 3 2 3 3 3 3 3 
+3 3 3 3 3 2 3 2 2 3 2 2 2 3 3 2 2 2 3 2 2 3 2 3 3 3 3 3 
+2 2 2 2 2 2 3 2 2 3 2 3 3 3 3 3 3 2 3 2 2 3 2 2 2 2 2 2 
+3 3 3 3 3 3 3 3 3 3 2 3 3 3 3 3 3 2 3 3 3 3 3 3 3 3 3 3 
+2 2 2 2 2 2 3 2 2 3 2 3 3 3 3 3 3 2 3 2 2 3 2 2 2 2 2 2 
+3 3 3 3 3 2 3 2 2 3 2 2 2 2 2 2 2 2 3 2 2 3 2 3 3 3 3 3 
+3 3 3 3 3 2 3 2 2 3 3 3 3 3 3 3 3 3 3 2 2 3 2 3 3 3 3 3 
+3 3 3 3 3 2 3 2 2 3 2 2 2 2 2 2 2 2 3 2 2 3 2 3 3 3 3 3 
+2 2 2 2 2 2 3 2 2 3 2 2 2 2 2 2 2 2 3 2 2 3 2 2 2 2 2 2 
+2 3 3 3 3 3 3 3 3 3 3 3 3 2 2 3 3 3 3 3 3 3 3 3 3 3 3 2 
+2 3 2 2 2 2 3 2 2 2 2 2 3 2 2 3 2 2 2 2 2 3 2 2 2 2 3 2 
+2 3 2 2 2 2 3 2 2 2 2 2 3 2 2 3 2 2 2 2 2 3 2 2 2 2 3 2 
+2 3 3 3 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 2 3 3 3 2 
+2 2 2 3 2 2 3 2 2 3 2 2 2 2 2 2 2 2 3 2 2 3 2 2 3 2 2 2 
+2 2 2 3 2 2 3 2 2 3 2 2 2 2 2 2 2 2 3 2 2 3 2 2 3 2 2 2 
+2 3 3 3 3 3 3 2 2 3 3 3 3 2 2 3 3 3 3 2 2 3 3 3 3 3 3 2 
+2 3 2 2 2 2 2 2 2 2 2 2 3 2 2 3 2 2 2 2 2 2 2 2 2 2 3 2 
+2 3 2 2 2 2 2 2 2 2 2 2 3 2 2 3 2 2 2 2 2 2 2 2 2 2 3 2 
+2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 
+2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 </universes>
+  </lattice>
+  <surface id="100" type="x-plane" boundary="vacuum" coeffs="-1400.0"/>
+  <surface id="128" type="x-plane" boundary="vacuum" coeffs="1400.0"/>
+  <surface id="200" type="y-plane" boundary="vacuum" coeffs="-1550.0"/>
+  <surface id="231" type="y-plane" boundary="vacuum" coeffs="1550.0"/>
+  <surface id="301" type="z-plane" boundary="vacuum" coeffs="-300.0"/>
+  <surface id="302" type="z-plane" coeffs="-100.0"/>
+  <surface id="303" type="z-plane" coeffs="100.0"/>
+  <surface id="304" type="z-plane" boundary="vacuum" coeffs="300.0"/>
+</geometry>

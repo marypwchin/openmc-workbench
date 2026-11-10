@@ -17,3 +17,6 @@ output*/
 data_root.txt
 openmc_workbench_config.hpp
 a.out
+# Generated Pac-Man geometry plots
+pacman_plots_csg/
+pacman_plots_lattice/
