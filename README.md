@@ -44,7 +44,8 @@ The workbench is a record of ongoing explorations rather than an end-user tutori
 │   ├── 0_4_cross_sections_xml_pugixml.cpp
 │   └── 0_5_inspect_hdf5_reactions.cpp
 ├── 1_cross_sections/
-│   └── 1_0_ways_to_plot.ipynb
+│   ├── 1_0_ways_to_plot.ipynb
+│   └── 1_1_ways_to_convert_to_multigroup.ipynb
 ├── 2_materials/
 │   └── 2_0_ways_to_define_materials.ipynb
 ├── 3_geometry/
