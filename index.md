@@ -1,9 +1,8 @@
 # OpenMC Workbench
 
 <!-- shared:introduction -->
-**Ongoing work exploring [OpenMC](https://openmc.org/), building on an extensive background in Monte Carlo radiation transport.**
 
-This workbench explores OpenMC from the perspective of an experienced Monte Carlo radiation-transport physicist. It emphasizes hands-on investigation, computational workflows, and practical understanding.
+This workbench explores [OpenMC](https://openmc.org/) from the perspective of a physicist with a background in Monte Carlo radiation transport. It emphasizes hands-on investigation, computational workflows, and practical understanding.
 
 By Mary P. W. Chin
 <!-- /shared:introduction -->
@@ -105,6 +104,12 @@ the [ENDF/B-VIII.1 exploration notebook](0_nuclear_data/0_1_explore_endf-b8.1.ip
 | --- | --- | --- |
 | [`4_0_breeder_tritium_neutron_maps.ipynb`](4_run/4_0_breeder_tritium_neutron_maps.ipynb) | Map tritium production and neutron spectra in a concentric-spheres model. | [`Cell()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Cell.html), [`CellFilter()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.CellFilter.html), [`EnergyFilter()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.EnergyFilter.html), [`Geometry()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Geometry.html), [`IndependentSource()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.IndependentSource.html), [`Material()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Material.html), [`Material.add_element()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Material.html#openmc.Material.add_element), [`Material.get_nuclides()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Material.html#openmc.Material.get_nuclides), [`Material.mean_free_path()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Material.html#openmc.Material.mean_free_path), [`Material.set_density()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Material.html#openmc.Material.set_density), [`Materials()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Materials.html), [`MeshFilter()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.MeshFilter.html), [`Region.from_expression()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Region.html#openmc.Region.from_expression), [`Settings()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Settings.html), [`Sphere()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Sphere.html), [`StatePoint()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.StatePoint.html), [`Tallies()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Tallies.html), [`Tally()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Tally.html), [`Model()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.model.Model.html), [`Model.plot()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.model.Model.html#openmc.model.Model.plot), [`Model.run()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.model.Model.html#openmc.model.Model.run), [`plot_xs()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.plot_xs.html), [`plotter.calculate_cexs()`](https://docs.openmc.org/en/stable/_modules/openmc/plotter.html#calculate_cexs), [`Discrete()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.stats.Discrete.html), [`Isotropic()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.stats.Isotropic.html), [`Point()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.stats.Point.html) |
 | [`4_1_ways_to_run_and_post_process.ipynb`](4_run/4_1_ways_to_run_and_post_process.ipynb) | Explore different ways to run an OpenMC model, continue simulations, and retrieve tally results. | [`StatePoint()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.StatePoint.html), [`Model.from_model_xml()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.model.Model.html#openmc.model.Model.from_model_xml) |
+
+### MPI OpenMP Slurm
+
+| File | What it covers | OpenMC API |
+| --- | --- | --- |
+| [`5_0_test_mpi.cpp`](https://github.com/marypwchin/openmc-workbench/blob/main/5_MPI_OpenMP_Slurm/5_0_test_mpi.cpp) | A minimal MPI program that verifies initialization and communication between processes by summing values across them, independently of OpenMC. | — |
 <!-- /generated:notebooks -->
 
 ## Nuclear-data paths

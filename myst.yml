@@ -19,9 +19,11 @@ project:
     - title: Geometry
       children:
         - pattern: 3_geometry/*.ipynb
-    - title: Run
+    - title: Run on a single machine
       children:
         - pattern: 4_run/*.ipynb
+    - title: Run in parallel
+      file: 5_MPI_HPC_HTC/README.md
     - file: docs/compilers_and_libraries.md
 site:
   template: book-theme

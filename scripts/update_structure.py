@@ -338,7 +338,8 @@ def index_text(paths, readme):
         subdirectory = Path(path).parts[0]
         if subdirectory != directory:
             directory = subdirectory
-            heading = re.sub(r'^\d+_', '', directory).replace('_', ' ').capitalize()
+            heading = re.sub(r'^\d+_', '', directory).replace('_', ' ')
+            heading = heading[0].upper() + heading[1:]
             if lines:
                 lines.append('')
             lines.extend([

@@ -11,9 +11,8 @@
 
 
 <!-- shared:introduction -->
-**Ongoing work exploring [OpenMC](https://openmc.org/), building on an extensive background in Monte Carlo radiation transport.**
 
-This workbench explores OpenMC from the perspective of an experienced Monte Carlo radiation-transport physicist. It emphasizes hands-on investigation, computational workflows, and practical understanding.
+This workbench explores [OpenMC](https://openmc.org/) from the perspective of a physicist with a background in Monte Carlo radiation transport. It emphasizes hands-on investigation, computational workflows, and practical understanding.
 
 By Mary P. W. Chin
 <!-- /shared:introduction -->
@@ -50,9 +49,11 @@ The workbench is a record of ongoing explorations rather than an end-user tutori
 │   └── 2_0_ways_to_define_materials.ipynb
 ├── 3_geometry/
 │   └── 3_0_ways_to_build_pacman_maze.ipynb
-└── 4_run/
-    ├── 4_0_breeder_tritium_neutron_maps.ipynb
-    └── 4_1_ways_to_run_and_post_process.ipynb
+├── 4_run/
+│   ├── 4_0_breeder_tritium_neutron_maps.ipynb
+│   └── 4_1_ways_to_run_and_post_process.ipynb
+└── 5_MPI_OpenMP_Slurm/
+    └── 5_0_test_mpi.cpp
 ```
 <!-- /generated:structure -->
 
