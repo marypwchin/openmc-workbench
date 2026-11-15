@@ -12,7 +12,9 @@
 
 <!-- shared:introduction -->
 
-This workbench explores [OpenMC](https://openmc.org/) from the perspective of a physicist with a background in Monte Carlo radiation transport. It emphasizes hands-on investigation, computational workflows, and practical understanding.
+This workbench is an expression of the joy of experimentation — running simulations in the laboratory of computers. Starting from a first installation of [OpenMC](https://openmc.org/), a radiation-transport enthusiast explores.
+
+It emphasizes hands-on investigation, computational workflows, and practical understanding.
 
 By Mary P. W. Chin
 <!-- /shared:introduction -->
@@ -22,14 +24,14 @@ By Mary P. W. Chin
 ## Status
 
 <!-- shared:status -->
-This is an active, evolving workbench. Code, documentation, and analyses will be added and revised as the work progresses.
+This is an active and evolving workbench.
 
-The repository is public in the spirit of open-source collaboration and scientific exchange. Efforts are made to document the behind-the-scenes work, including data preparation, configuration, and computational setup, for transparency and reproducibility.
+The repository is public in the spirit of open-source collaboration and scientific exchange. Alongside the Jupyter notebooks and C++ programs, it documents what goes on behind the scenes — data preparation, configuration, and computational environment — for transparency and reproducibility.
 
-The workbench is a record of ongoing explorations rather than an end-user tutorial. Comments, corrections, and peer review are welcome.
+Rather than a polished end-user tutorial, the workbench is a record of ongoing exploration. Comments, corrections, and peer review are welcome.
 <!-- /shared:status -->
 
-## Explorations
+## The workbench at a glance
 
 <!-- generated:structure -->
 ```text

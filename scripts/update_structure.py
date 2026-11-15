@@ -180,14 +180,10 @@ def readme_text(paths):
     selected = exploration_paths(paths)
     generated = START + '\n' + render_tree(selected) + '\n' + END
     text = (ROOT / 'README.md').read_text(encoding='utf-8')
-    explorations = re.search(r'(?m)^## Explorations[ \t]*$', text)
-    nuts_and_bolts = re.search(r'(?m)^## Nuts and bolts[ \t]*$', text)
-    if explorations is None or nuts_and_bolts is None or explorations.start() >= nuts_and_bolts.start():
-        raise ValueError('README.md needs ## Explorations before ## Nuts and bolts')
+    # The generated block may appear under any heading, regardless of its title.
     if (text.count(START) != 1 or text.count(END) != 1
-            or not (explorations.end() < text.index(START)
-                    < text.index(END) < nuts_and_bolts.start())):
-        raise ValueError('README.md needs generated:structure under ## Explorations')
+            or text.index(START) >= text.index(END)):
+        raise ValueError('README.md needs exactly one complete generated:structure block')
     pattern = re.escape(START) + r'.*?' + re.escape(END)
     text, count = re.subn(pattern, lambda _: generated, text, flags=re.S)
     if count != 1:
@@ -255,11 +251,9 @@ def shared_block(text, name):
 
 def exploration_notes(readme):
     """Copy the two Nuts and bolts subsections from README.md."""
-    explorations = re.search(r'(?m)^## Explorations[ \t]*$', readme)
     nuts_and_bolts = re.search(r'(?m)^## Nuts and bolts[ \t]*$', readme)
-    if (explorations is None or nuts_and_bolts is None
-            or explorations.start() >= nuts_and_bolts.start()):
-        raise ValueError('README.md needs ## Explorations before ## Nuts and bolts')
+    if nuts_and_bolts is None:
+        raise ValueError('README.md needs ## Nuts and bolts')
 
     following = re.search(r'(?m)^## [^\n]+$', readme[nuts_and_bolts.end():])
     end = nuts_and_bolts.end() + following.start() if following else len(readme)
@@ -297,12 +291,6 @@ def index_text(paths, readme):
     text, n = re.subn(r'^# .+$', lambda _: title.group(), text, count=1, flags=re.M)
     if n != 1:
         raise ValueError('index.md needs a top-level title')
-    nuts_and_bolts = re.search(r'(?m)^## Nuts and bolts[ \t]*$', text)
-    explorations = re.search(r'(?m)^## Explorations[ \t]*$', text)
-    if (nuts_and_bolts is None or explorations is None
-            or nuts_and_bolts.start() >= explorations.start()):
-        raise ValueError('index.md needs ## Nuts and bolts before ## Explorations')
-
     for section in ('introduction', 'data', 'compilers', 'status'):
         content = shared_block(readme, section)
         pattern = (r'<!-- shared:' + re.escape(section)
@@ -366,18 +354,21 @@ def index_text(paths, readme):
     generated = INDEX_START + '\n' + '\n'.join(lines) + '\n' + INDEX_END
     text = re.sub(pattern, lambda _: generated, text, count=1, flags=re.S)
 
-    # The notes belong under Nuts and bolts; the tables belong under Explorations.
+    # Notes must stay inside Nuts and bolts; notebook tables can have any heading.
     nuts_and_bolts = re.search(r'(?m)^## Nuts and bolts[ \t]*$', text)
-    explorations = re.search(r'(?m)^## Explorations[ \t]*$', text)
+    if nuts_and_bolts is None:
+        raise ValueError('index.md needs ## Nuts and bolts')
+    following = re.search(r'(?m)^## [^\n]+$', text[nuts_and_bolts.end():])
+    notes_section_end = (nuts_and_bolts.end() + following.start()
+                         if following else len(text))
     if (text.count(NOTES_START) != 1 or text.count(NOTES_END) != 1
             or text.count(INDEX_START) != 1 or text.count(INDEX_END) != 1
-            or nuts_and_bolts is None or explorations is None
             or not (nuts_and_bolts.end() < text.index(NOTES_START)
-                    < text.index(NOTES_END) < explorations.start()
-                    < text.index(INDEX_START) < text.index(INDEX_END))):
+                    < text.index(NOTES_END) < notes_section_end
+                    <= text.index(INDEX_START) < text.index(INDEX_END))):
         raise ValueError(
             'index.md needs generated:exploration-notes under ## Nuts and bolts '
-            'and generated:notebooks under ## Explorations'
+            'and generated:notebooks later in the document'
         )
     notes = NOTES_START + '\n' + exploration_notes(readme) + '\n' + NOTES_END
     notes_pattern = re.escape(NOTES_START) + r'.*?' + re.escape(NOTES_END)

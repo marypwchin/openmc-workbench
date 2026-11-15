@@ -17,6 +17,7 @@ project:
       children:
         - pattern: 2_materials/*.ipynb
     - title: Geometry
+      file: 3_geometry/README.md
       children:
         - pattern: 3_geometry/*.ipynb
     - title: Run on a single machine
