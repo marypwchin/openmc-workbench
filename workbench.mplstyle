@@ -1,0 +1,47 @@
+# OpenMC Workbench — Matplotlib style
+# Categorical palette: Paul Tol, Bright (published order)
+# Continuous colormap: inferno_r
+# Note: in .mplstyle files, write hexadecimal colors without leading #.
+# Markers are spaced along curves rather than drawn at every sample.
+
+# Data colors
+axes.prop_cycle: cycler(color=['4477AA', 'EE6677', '228833', 'CCBB44', '66CCEE', 'AA3377', 'BBBBBB']) + cycler(marker=['o', 's', '^', 'D', 'v', 'P', 'X']) + cycler(markevery=[0.12, 0.12, 0.12, 0.12, 0.12, 0.12, 0.12])
+image.cmap: inferno_r
+
+# Typography
+font.family: DejaVu Sans
+font.size: 10.5
+axes.titlesize: 12
+axes.titleweight: normal
+axes.labelsize: 11
+xtick.labelsize: 10
+xtick.color: 243746
+ytick.labelsize: 10
+ytick.color: 243746
+legend.fontsize: 10
+text.color: 243746
+axes.labelcolor: 243746
+
+# Lines
+lines.linewidth: 1.8
+lines.markersize: 4.5
+lines.markeredgewidth: 0.75
+
+# Axes and grid
+axes.edgecolor: 87949E
+axes.linewidth: 0.8
+axes.spines.top: False
+axes.spines.right: False
+axes.grid: False
+grid.color: DCE3E7
+grid.linewidth: 0.7
+grid.alpha: 0.8
+
+# Figures, legend, and exports
+figure.figsize: 7, 4.5
+figure.dpi: 110
+figure.facecolor: white
+axes.facecolor: white
+legend.frameon: False
+savefig.facecolor: white
+savefig.dpi: 200
