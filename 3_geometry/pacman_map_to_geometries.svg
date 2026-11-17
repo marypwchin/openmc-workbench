@@ -16,9 +16,9 @@
   </style>
 </defs>
 <rect width="100%" height="100%" fill="#ffffff"/>
-<text x="54" y="56" class="eyebrow">OPENMC WORKBENCH / GEOMETRY FOR AIR STREAMING, SHIELDING, AND VARIANCE REDUCTION</text>
+<text x="54" y="56" class="eyebrow">OPENMC WORKBENCH / GEOMETRY FOR VARIANCE REDUCTION</text>
 <text x="54" y="116" class="headline">From a 28x31 character map to OpenMC geometries</text>
-<text x="54" y="154" class="sub">A Pac-Man maze</text>
+<text x="54" y="154" class="sub">A Pac-Man maze.</text>
 <rect x="495" y="174" width="460" height="546" rx="26" fill="#F6FAFD" stroke="#BED0E2" stroke-width="2.3" filter="url(#shadow)"/>
 <text x="540" y="218" class="cardTitle">Original character map</text>
 <text x="540" y="247" class="cardSub">28 columns × 31 rows · 868 characters</text>

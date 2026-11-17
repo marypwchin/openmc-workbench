@@ -1,4 +1,4 @@
-## Nuclear-data setup
+# Nuclear data
 
 ### Beware of file-size explosion
 Nuclear-data libraries can take up a substantial amount of disk space after downloading and conversion. Here is what I have:

@@ -250,7 +250,7 @@ def shared_block(text, name):
 
 
 def exploration_notes(readme):
-    """Copy the two Nuts and bolts subsections from README.md."""
+    """Copy selected Nuts and bolts subsections from README.md."""
     nuts_and_bolts = re.search(r'(?m)^## Nuts and bolts[ \t]*$', readme)
     if nuts_and_bolts is None:
         raise ValueError('README.md needs ## Nuts and bolts')
@@ -267,7 +267,7 @@ def exploration_notes(readme):
             raise ValueError(f'Duplicate ### {name} subsection in README.md')
         subsections[name] = content[heading.start():stop].strip()
 
-    names = ('Python and C++', 'Programmatic approach')
+    names = ('Python and C++', 'Programmatic approach', 'Plotting style')
     for name in names:
         if name not in subsections:
             raise ValueError(f'README.md needs a ### {name} subsection under ## Nuts and bolts')

@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1204" width="1600" height="1204" role="img" aria-labelledby="svgtitle svgdesc">
+<title id="svgtitle">Tritium breeding in the context of fusion energy</title>
+<desc id="svgdesc">Nested overview of fusion fuel reactions, ways tritium is produced, the deuterium–tritium fusion and lithium breeding cycle, and factors affecting blanket performance, with an IAEA presentation link for broader engineering context. The notebook models 14 MeV source-neutron transport through concentric spherical first-wall and PbLi breeder regions, and tallies lithium tritium production and neutron fluence.</desc>
+<style>text { font-family: -apple-system, BlinkMacSystemFont, 'DejaVu Sans', sans-serif; }</style>
+<defs>
+<marker id="blueArrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#4477AA"/></marker>
+<marker id="inkArrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#24364A"/></marker>
+<marker id="redArrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#EE6677"/></marker>
+</defs>
+<rect width="1600" height="1204" fill="#F8FAFC"/>
+
+<text x="72" y="48" fill="#4477AA" font-size="16" font-weight="800" text-anchor="start" letter-spacing="2.0">OPENMC WORKBENCH / TRITIUM BREEDING</text>
+<text x="72" y="99" fill="#24364A" font-size="40" font-weight="800" text-anchor="start">Tritium breeding in context</text>
+<text x="74" y="135" fill="#587083" font-size="21" font-weight="400" text-anchor="start">From fusion neutrons to tritium production in a lithium blanket</text>
+<g transform="translate(0, 52)">
+<rect x="48" y="127" width="1504" height="997" rx="22" fill="#FFFFFF" stroke="#CFDCE7" stroke-width="2"/>
+<rect x="48" y="127" width="1504" height="146" rx="22" fill="#EDF3F8" stroke="none" stroke-width="1"/>
+<rect x="48" y="249" width="1504" height="24" rx="0" fill="#EDF3F8" stroke="none" stroke-width="1"/>
+<text x="77" y="163" fill="#4477AA" font-size="17" font-weight="800" text-anchor="start" letter-spacing="1.7">FUSION FUEL CYCLES</text>
+<text x="433" y="163" fill="#587083" font-size="17" font-weight="400" text-anchor="start">D–T is one option among several fusion reactions</text>
+<rect x="79" y="186" width="342" height="66" rx="12" fill="#EAF2F9" stroke="#4477AA" stroke-width="2"/>
+<rect x="93" y="201" width="5" height="37" rx="2" fill="#4477AA" stroke="none" stroke-width="1"/>
+<text x="110" y="213" fill="#4477AA" font-size="22" font-weight="700" text-anchor="start">D + T</text>
+<path d="M196 205 H219" fill="none" stroke="#4477AA" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#inkArrow)"/>
+<text x="234" y="213" fill="#4477AA" font-size="22" font-weight="700" text-anchor="start">⁴He + n</text>
+<text x="110" y="237" fill="#587083" font-size="15" font-weight="400" text-anchor="start">⁴He 3.52 MeV · n 14.06 MeV</text>
+<rect x="436" y="186" width="342" height="66" rx="12" fill="#FFFFFF" stroke="#DCE5ED" stroke-width="1.5"/>
+<rect x="450" y="201" width="5" height="37" rx="2" fill="#B8C6D2" stroke="none" stroke-width="1"/>
+<text x="465" y="211" fill="#24364A" font-size="16" font-weight="700" text-anchor="start">D + D</text>
+<path d="M516 205 H534" stroke="#24364A" stroke-width="1.6" fill="none" marker-end="url(#inkArrow)"/>
+<text x="550" y="211" fill="#24364A" font-size="15.1" font-weight="700" text-anchor="start">T (1.01) + p (3.02) MeV</text>
+<text x="465" y="237" fill="#587083" font-size="15.4" font-weight="500" text-anchor="start">D + D</text>
+<path d="M516 231 H534" stroke="#587083" stroke-width="1.6" fill="none" marker-end="url(#inkArrow)"/>
+<text x="550" y="237" fill="#587083" font-size="14.5" font-weight="500" text-anchor="start">³He (0.82) + n (2.45) MeV</text>
+<rect x="793" y="186" width="342" height="66" rx="12" fill="#FFFFFF" stroke="#DCE5ED" stroke-width="1.5"/>
+<rect x="807" y="201" width="5" height="37" rx="2" fill="#B8C6D2" stroke="none" stroke-width="1"/>
+<text x="824" y="213" fill="#24364A" font-size="22" font-weight="700" text-anchor="start">D + ³He</text>
+<path d="M942 205 H964" fill="none" stroke="#24364A" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#inkArrow)"/>
+<text x="979" y="213" fill="#24364A" font-size="22" font-weight="700" text-anchor="start">⁴He + p</text>
+<text x="824" y="237" fill="#587083" font-size="15" font-weight="400" text-anchor="start">⁴He 3.6 MeV · p 14.7 MeV</text>
+<rect x="1150" y="186" width="341" height="66" rx="12" fill="#FFFFFF" stroke="#DCE5ED" stroke-width="1.5"/>
+<rect x="1164" y="201" width="5" height="37" rx="2" fill="#B8C6D2" stroke="none" stroke-width="1"/>
+<text x="1181" y="213" fill="#24364A" font-size="22" font-weight="700" text-anchor="start">p + ¹¹B</text>
+<path d="M1289 205 H1311" fill="none" stroke="#24364A" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#inkArrow)"/>
+<text x="1326" y="213" fill="#24364A" font-size="22" font-weight="700" text-anchor="start">3 ⁴He</text>
+<text x="1181" y="237" fill="#587083" font-size="15" font-weight="400" text-anchor="start">8.7 MeV released</text>
+<rect x="75" y="292" width="1450" height="804" rx="19" fill="#FBFCFD" stroke="#CBD9E5" stroke-width="1.8"/>
+<text x="103" y="329" fill="#4477AA" font-size="17" font-weight="800" text-anchor="start" letter-spacing="1.5">TRITIUM PRODUCTION</text>
+<text x="414" y="329" fill="#587083" font-size="17" font-weight="400" text-anchor="start">Lithium breeding is the main planned route to D–T fuel self-sufficiency</text>
+<path d="M103 346 H1492" fill="none" stroke="#DCE5ED" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="97" y="369" width="1075" height="703" rx="17" fill="#FFFFFF" stroke="#C6D9E6" stroke-width="2"/>
+<text x="125" y="402" fill="#4477AA" font-size="18" font-weight="800" text-anchor="start" letter-spacing="0.7">LITHIUM BREEDING IN A D–T BLANKET</text>
+<text x="125" y="428" fill="#587083" font-size="17" font-weight="400" text-anchor="start">Fusion neutrons produce tritium; the tritium is returned to the fuel</text>
+<rect x="120" y="448" width="1029" height="335" rx="16" fill="#F9FBFE" stroke="#DFE8F2" stroke-width="1.5"/>
+<text x="146" y="479" fill="#587083" font-size="14" font-weight="800" text-anchor="start" letter-spacing="1.5">REACTION CYCLE</text>
+<rect x="340" y="492" width="607" height="75" rx="15" fill="#E8F2FB" stroke="#4477AA" stroke-width="2.5"/>
+<text x="372" y="539" fill="#24364A" font-size="37" font-weight="700" text-anchor="start">D + T</text>
+<path d="M525 531 H571" fill="none" stroke="#24364A" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#inkArrow)"/>
+<text x="586" y="539" fill="#24364A" font-size="37" font-weight="700" text-anchor="start">⁴He + n</text>
+<text x="694" y="559" fill="#4477AA" font-size="15" font-weight="600" text-anchor="start">n = 14.1 MeV</text>
+<path d="M947 529 H1066 V604 H377" fill="none" stroke="#4477AA" stroke-width="3.1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M377 604 V633" fill="none" stroke="#4477AA" stroke-width="3.1" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#blueArrow)"/>
+<path d="M876 604 V633" fill="none" stroke="#4477AA" stroke-width="3.1" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#blueArrow)"/>
+<rect x="1005" y="557" width="39" height="28" rx="14" fill="#EDF4FB" stroke="none" stroke-width="1"/>
+<text x="1024" y="577" fill="#4477AA" font-size="17" font-weight="700" text-anchor="middle">n</text>
+<rect x="136" y="630" width="991" height="120" rx="15" fill="none" stroke="#4477AA" stroke-width="2.2" stroke-dasharray="8 6"/>
+<rect x="145" y="638" width="454" height="103" rx="12" fill="#FFFFFF" stroke="#DFE6EC" stroke-width="1.6"/>
+<rect x="616" y="638" width="502" height="103" rx="12" fill="#FFFFFF" stroke="#DFE6EC" stroke-width="1.6"/>
+<text x="164" y="684" fill="#24364A" font-size="28" font-weight="700" text-anchor="start">⁶Li + n</text>
+<path d="M311 676 H343" fill="none" stroke="#24364A" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#inkArrow)"/>
+<text x="358" y="684" fill="#24364A" font-size="28" font-weight="700" text-anchor="start">⁴He + T</text>
+<text x="166" y="715" fill="#587083" font-size="17" font-weight="400" text-anchor="start">⁶Li(n,t)⁴He · Q = +4.78 MeV</text>
+<text x="640" y="684" fill="#24364A" font-size="27" font-weight="700" text-anchor="start">⁷Li + n</text>
+<path d="M787 676 H818" fill="none" stroke="#24364A" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#inkArrow)"/>
+<text x="833" y="684" fill="#24364A" font-size="27" font-weight="700" text-anchor="start">⁴He + T + n′</text>
+<text x="641" y="715" fill="#587083" font-size="17" font-weight="400" text-anchor="start">⁷Li(n,nt)⁴He · threshold ~2.8 MeV</text>
+<rect x="420" y="618" width="466" height="29" rx="14" fill="#E6F0FA" stroke="#4477AA" stroke-width="1.1"/>
+<text x="653" y="638" fill="#4477AA" font-size="14" font-weight="800" text-anchor="middle">NOTEBOOK · NEUTRON TRANSPORT &amp; (n,Xt) TALLIES</text>
+<path d="M377 743 V761 H131 V529 H340" fill="none" stroke="#EE6677" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#redArrow)"/>
+<path d="M872 743 V761 H377" fill="none" stroke="#EE6677" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="154" y="545" width="144" height="28" rx="14" fill="#FDECF0" stroke="none" stroke-width="1"/>
+<text x="226" y="565" fill="#EE6677" font-size="15" font-weight="700" text-anchor="middle">T recycled</text>
+<text x="137" y="817" fill="#24364A" font-size="17" font-weight="800" text-anchor="start" letter-spacing="0.7">BREEDING PERFORMANCE DEPENDS ON</text>
+<text x="1127" y="817" fill="#4477AA" font-size="15" font-weight="600" text-anchor="end">Highlights: quantities examined in this notebook</text>
+<rect x="135" y="840" width="318" height="82" rx="12" fill="#F0F5FB" stroke="#4477AA" stroke-width="2.2"/>
+<rect x="147" y="853" width="5" height="55" rx="2" fill="#4477AA" stroke="none" stroke-width="1"/>
+<text x="160" y="882" fill="#4477AA" font-size="20" font-weight="700" text-anchor="start">Cross sections σ(E)</text>
+<text x="160" y="900" fill="#587083" font-size="15" font-weight="400" text-anchor="start">⁶Li and ⁷Li (n,Xt), MT 205</text>
+<rect x="354" y="846" width="86" height="19" rx="9" fill="#E1EBF8" stroke="none" stroke-width="1"/>
+<text x="396.5" y="860" fill="#4477AA" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="0.55">NOTEBOOK</text>
+<rect x="465" y="840" width="318" height="82" rx="12" fill="#F0F5FB" stroke="#AA3377" stroke-width="2.2"/>
+<rect x="477" y="853" width="5" height="55" rx="2" fill="#AA3377" stroke="none" stroke-width="1"/>
+<text x="490" y="882" fill="#AA3377" font-size="20" font-weight="700" text-anchor="start">Lithium composition</text>
+<text x="490" y="900" fill="#587083" font-size="15" font-weight="400" text-anchor="start">PbLi · 50% ⁶Li enrichment</text>
+<rect x="684" y="846" width="86" height="19" rx="9" fill="#E1EBF8" stroke="none" stroke-width="1"/>
+<text x="726.5" y="860" fill="#4477AA" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="0.55">NOTEBOOK</text>
+<rect x="795" y="840" width="350" height="82" rx="12" fill="#F0F5FB" stroke="#4477AA" stroke-width="2.2"/>
+<rect x="807" y="853" width="5" height="55" rx="2" fill="#4477AA" stroke="none" stroke-width="1"/>
+<text x="820" y="882" fill="#4477AA" font-size="20" font-weight="700" text-anchor="start">Neutron spectrum &amp; fluence</text>
+<text x="820" y="900" fill="#587083" font-size="15" font-weight="400" text-anchor="start">radial and energy distributions</text>
+<rect x="1046" y="846" width="86" height="19" rx="9" fill="#E1EBF8" stroke="none" stroke-width="1"/>
+<text x="1088.5" y="860" fill="#4477AA" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="0.55">NOTEBOOK</text>
+<rect x="135" y="936" width="318" height="82" rx="12" fill="#FFFFFF" stroke="#DCE5ED" stroke-width="1.4"/>
+<text x="160" y="971" fill="#24364A" font-size="20" font-weight="600" text-anchor="start">Neutron multiplication</text>
+<text x="160" y="996" fill="#587083" font-size="15" font-weight="400" text-anchor="start">e.g. Be and Pb reactions</text>
+<rect x="465" y="936" width="318" height="82" rx="12" fill="#F0F5FB" stroke="#4477AA" stroke-width="2.2"/>
+<rect x="477" y="949" width="5" height="55" rx="2" fill="#4477AA" stroke="none" stroke-width="1"/>
+<text x="490" y="978" fill="#4477AA" font-size="20" font-weight="700" text-anchor="start">Blanket geometry</text>
+<text x="490" y="996" fill="#587083" font-size="15" font-weight="400" text-anchor="start">simple concentric-spheres model · PbLi</text>
+<rect x="684" y="942" width="86" height="19" rx="9" fill="#E1EBF8" stroke="none" stroke-width="1"/>
+<text x="726.5" y="956" fill="#4477AA" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="0.55">NOTEBOOK</text>
+<rect x="795" y="936" width="350" height="82" rx="12" fill="#FFFFFF" stroke="#DCE5ED" stroke-width="1.4"/>
+<text x="820" y="971" fill="#24364A" font-size="20" font-weight="600" text-anchor="start">Tritium recovery</text>
+<text x="820" y="996" fill="#587083" font-size="15" font-weight="400" text-anchor="start">extraction, retention, inventory</text>
+<text x="136" y="1048" fill="#587083" font-size="17" font-weight="600" text-anchor="start">TBR = tritium produced / tritium consumed</text>
+<rect x="1193" y="369" width="309" height="415" rx="17" fill="#FFFFFF" stroke="#DCE5ED" stroke-width="1.7"/>
+<text x="1216" y="401" fill="#24364A" font-size="15.5" font-weight="800" text-anchor="start" letter-spacing="0.55">BEYOND THIS NOTEBOOK</text>
+<text x="1216" y="426" fill="#24364A" font-size="15.5" font-weight="800" text-anchor="start" letter-spacing="0.55">AND FUSION NEUTRONICS</text>
+<path d="M1216 447 H1478" fill="none" stroke="#DCE5ED" stroke-width="1.4"/>
+<text x="1217" y="488" fill="#4477AA" font-size="15" font-weight="700" text-anchor="start" letter-spacing="0.6">IAEA PRESENTATION</text>
+<a href="https://www.iaea.org/sites/default/files/global-approaches-to-tritium-breeding-for-fusion-materials-challenges-and-pathways-presentations-111225.pdf" target="_blank">
+  <title>Open the IAEA presentation (PDF)</title>
+  <text x="1217" y="530" fill="#245B9B" font-size="18" font-weight="650" text-anchor="start" text-decoration="underline">Global Approaches to</text>
+  <text x="1217" y="559" fill="#245B9B" font-size="18" font-weight="650" text-anchor="start" text-decoration="underline">Tritium Breeding for</text>
+  <text x="1217" y="588" fill="#245B9B" font-size="18" font-weight="650" text-anchor="start" text-decoration="underline">Fusion: Materials,</text>
+  <text x="1217" y="617" fill="#245B9B" font-size="18" font-weight="650" text-anchor="start" text-decoration="underline">Challenges, and</text>
+  <text x="1217" y="646" fill="#245B9B" font-size="18" font-weight="650" text-anchor="start" text-decoration="underline">Pathways</text>
+  <rect x="1208" y="510" width="277" height="150" fill="transparent"/>
+</a>
+<text x="1217" y="690" fill="#587083" font-size="15.5" font-weight="500" text-anchor="start">11 December 2025</text>
+</g>
+</svg>

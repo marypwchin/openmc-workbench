@@ -58,8 +58,27 @@ for name, dat in mats_df.groupby('name'):
         mats[name].add_element(**row.dropna().to_dict())
 ```
 
-
 This separation of input data from model-construction logic minimizes repetitive code, reduces the risk of inconsistencies, and makes the examples easier to explore, modify, and validate.
+
+### Plotting style
+
+The Workbench uses a common Matplotlib style, [`workbench.mplstyle`](workbench.mplstyle), for consistent typography, colors, markers, and plot formatting.
+
+The color choices follow [Matplotlib's guidance on colormaps](https://matplotlib.org/stable/users/explain/colors/colormaps.html), emphasizing perceptual uniformity and accessibility across different forms of color vision.
+
+The default continuous colormap is `inferno_r`, a perceptually uniform sequential colormap. For categorical plots, the Workbench uses [Paul Tol Bright](https://sronpersonalpages.nl/~pault/), a color-blind-safe qualitative palette, complemented by distinct markers to improve readability.
+
+For comparisons relative to a reference value, the Workbench uses the diverging colormap `RdBu`. This is useful, for example, when plotting FOM ratios between variance-reduction techniques, where unity represents parity. A logarithmic scale places unity at the center, treating reciprocal ratios symmetrically.
+
+Load the style in a notebook with:
+
+```python
+from pathlib import Path
+import matplotlib.pyplot as plt
+import openmc_workbench_config
+
+plt.style.use(Path(openmc_workbench_config.__file__).with_name('workbench.mplstyle'))
+```
 <!-- /generated:exploration-notes -->
 
 ## The workbench at a glance
@@ -86,7 +105,7 @@ the [ENDF/B-VIII.1 exploration notebook](0_nuclear_data/0_1_explore_endf-b8.1.ip
 | File | What it covers | OpenMC API |
 | --- | --- | --- |
 | [`1_0_ways_to_plot.ipynb`](1_cross_sections/1_0_ways_to_plot.ipynb) | Survey three ways to plot continuous-energy cross sections in OpenMC: `plot_xs()`, `calculate_cexs()`, and direct access to HDF5 data. | [`DataLibrary.from_xml()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.DataLibrary.html#openmc.data.DataLibrary.from_xml), [`DataLibrary.get_by_material()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.DataLibrary.html#openmc.data.DataLibrary.get_by_material), [`IncidentNeutron.from_hdf5()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.IncidentNeutron.html#openmc.data.IncidentNeutron.from_hdf5), [`plot_xs()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.plot_xs.html), [`plotter.calculate_cexs()`](https://docs.openmc.org/en/stable/_modules/openmc/plotter.html#calculate_cexs) |
-| [`1_1_ways_to_convert_to_multigroup.ipynb`](1_cross_sections/1_1_ways_to_convert_to_multigroup.ipynb) | Generate and compare OpenMC multigroup cross sections (MGXS) with `material_wise`, `stochastic_slab`, and `infinite_medium`, as preparation for a later Pac-Man FW-CADIS simulation. | [`Geometry.get_all_cells()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Geometry.html#openmc.Geometry.get_all_cells), [`IndependentSource()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.IndependentSource.html), [`Material()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Material.html), [`Material.add_element()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Material.html#openmc.Material.add_element), [`Material.set_density()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Material.html#openmc.Material.set_density), [`Materials()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Materials.html), [`MeshFilter()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.MeshFilter.html), [`RegularMesh()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.RegularMesh.html), [`Settings()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Settings.html), [`Tallies()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Tallies.html), [`Tally()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Tally.html), [`Model()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.model.Model.html), [`plot_xs()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.plot_xs.html), [`Discrete()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.stats.Discrete.html), [`Isotropic()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.stats.Isotropic.html), [`Point()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.stats.Point.html) |
+| [`1_1_ways_to_convert_to_multigroup.ipynb`](1_cross_sections/1_1_ways_to_convert_to_multigroup.ipynb) | Compare three OpenMC multigroup cross-section (MGXS) generation methods for the Pac-Man maze: `material_wise`, `stochastic_slab`, and `infinite_medium`. | [`Geometry.get_all_cells()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Geometry.html#openmc.Geometry.get_all_cells), [`IndependentSource()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.IndependentSource.html), [`Material()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Material.html), [`Material.add_element()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Material.html#openmc.Material.add_element), [`Material.set_density()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Material.html#openmc.Material.set_density), [`Materials()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Materials.html), [`MeshFilter()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.MeshFilter.html), [`RegularMesh()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.RegularMesh.html), [`Settings()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Settings.html), [`Tallies()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Tallies.html), [`Tally()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.Tally.html), [`Model()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.model.Model.html), [`plot_xs()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.plot_xs.html), [`Discrete()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.stats.Discrete.html), [`Isotropic()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.stats.Isotropic.html), [`Point()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.stats.Point.html) |
 
 ### Materials
 

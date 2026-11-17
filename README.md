@@ -19,7 +19,7 @@ It emphasizes hands-on investigation, computational workflows, and practical und
 By Mary P. W. Chin
 <!-- /shared:introduction -->
 
-[**Read online →**](https://marypwchin.github.io/openmc-workbench/)
+The [Workbench website](https://marypwchin.github.io/openmc-workbench/) of this repository offers an alternative reading experience, with menus, on-page section navigation, and previous/next page links. The content is largely the same.
 
 ## Status
 
@@ -95,8 +95,27 @@ for name, dat in mats_df.groupby('name'):
         mats[name].add_element(**row.dropna().to_dict())
 ```
 
-
 This separation of input data from model-construction logic minimizes repetitive code, reduces the risk of inconsistencies, and makes the examples easier to explore, modify, and validate.
+
+### Plotting style
+
+The Workbench uses a common Matplotlib style, [`workbench.mplstyle`](workbench.mplstyle), for consistent typography, colors, markers, and plot formatting.
+
+The color choices follow [Matplotlib's guidance on colormaps](https://matplotlib.org/stable/users/explain/colors/colormaps.html), emphasizing perceptual uniformity and accessibility across different forms of color vision.
+
+The default continuous colormap is `inferno_r`, a perceptually uniform sequential colormap. For categorical plots, the Workbench uses [Paul Tol Bright](https://sronpersonalpages.nl/~pault/), a color-blind-safe qualitative palette, complemented by distinct markers to improve readability.
+
+For comparisons relative to a reference value, the Workbench uses the diverging colormap `RdBu`. This is useful, for example, when plotting FOM ratios between variance-reduction techniques, where unity represents parity. A logarithmic scale places unity at the center, treating reciprocal ratios symmetrically.
+
+Load the style in a notebook with:
+
+```python
+from pathlib import Path
+import matplotlib.pyplot as plt
+import openmc_workbench_config
+
+plt.style.use(Path(openmc_workbench_config.__file__).with_name('workbench.mplstyle'))
+```
 
 ## Nuclear-data paths
 
@@ -165,3 +184,9 @@ This arrangement allows Python notebooks and C++ programs to use the same nuclea
 <!-- shared:compilers -->
 See [docs/compilers_and_libraries.md](docs/compilers_and_libraries.md).
 <!-- /shared:compilers -->
+
+## License and citation
+
+OpenMC Workbench is released under the [Apache License 2.0](LICENSE). You are welcome to use, modify, and build upon the work, subject to the license terms.
+
+For academic use, please cite the Workbench using [CITATION.cff](CITATION.cff), and acknowledge the relevant original publications and data sources.

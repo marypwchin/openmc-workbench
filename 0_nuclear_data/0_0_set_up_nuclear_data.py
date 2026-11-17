@@ -22,7 +22,7 @@
 # ```
 # <!-- /generated:structure -->
 # 
-# This notebook installs nuclear-data libraries for use with OpenMC. The libraries reside outside the repository, in the directory specified by `data_root.txt`. Before running the notebook, follow the [Nuclear-data paths](../README.md#nuclear-data-paths) instructions to set that directory and make `openmc_workbench_config` available in your Jupyter Python environment. You will also need OpenMC and `tqdm` (`%pip install tqdm` if needed).
+# This notebook installs nuclear-data libraries for use with OpenMC. The libraries reside outside the repository, in the directory specified by `data_root.txt`. Before running the notebook, follow the [Nuclear-data paths](../README.md#nuclear-data-paths) instructions to set that directory and make `openmc_workbench_config` available in your Jupyter Python environment. You will also need OpenMC. For progress bars in Jupyter, install `tqdm` (`%pip install tqdm` if needed). The standalone Python script does not require `tqdm`.
 # 
 # A standalone alternative, [0_0_set_up_nuclear_data.py](0_0_set_up_nuclear_data.py), is exported from this notebook. **Run either the notebook or the Python script, not both.**
 # 
@@ -31,10 +31,11 @@
 # Before starting:
 # 
 # 1. Review the disk-space requirements below. Downloaded archives can expand to much larger files.
-# 2. Download **FENDL-3.2c → Neutron → ACE** from the [IAEA](https://www-nds.iaea.org/fendl/) and save the ZIP file locally. Set `LOCAL_ARCHIVES["fendl-3.2c"]` in the code below to its path. Other entries can remain `None` for automatic downloads.
-# 3. Run once with `APPLY = False` to see the planned downloads and conversions. Set `APPLY = True` and rerun to install the files.
+# 2. Set `INSTALL` to `True` for each library or depletion chain you want. Leave the others as `False`.
+# 3. If selecting FENDL-3.2c, download **FENDL-3.2c → Neutron → ACE** from the [IAEA](https://www-nds.iaea.org/fendl/) and set `LOCAL_ARCHIVES["fendl-3.2c"]` to its saved ZIP path. Other entries can remain `None` for automatic downloads.
+# 4. Run once with `APPLY = False` to review the selected installations. Set `APPLY = True` and rerun to install them.
 # 
-# Libraries that already have a `cross_sections.xml` index are skipped. Downloads and conversions may take considerable time; progress bars show download and checksum progress.
+# Only selected libraries are processed. Libraries that already have a `cross_sections.xml` index are skipped. Downloads and conversions may take considerable time. Jupyter displays progress bars; the standalone script runs without them.
 # 
 # ## Disk-space requirements
 # 
@@ -99,18 +100,30 @@
 from pathlib import Path
 import hashlib
 import json
+import sys
 import shutil
 import subprocess
 import tarfile
 import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
-from tqdm import tqdm
 
 from openmc_workbench_config import DATA_ROOT
 
 ROOT = DATA_ROOT
-APPLY = False  # True installs data; False prints the steps only.
+APPLY = False  # True installs the selected data; False prints the steps only.
+
+# Select each library or depletion chain independently.
+INSTALL = {
+    "endf-b8.1": False,
+    "jeff-4": False,
+    "jendl-5": False,
+    "fendl-3.2c": False,
+    "wmp": False,
+    "chain-endf-b8.1-fast.xml": False,
+    "chain-jeff-4-fast.xml": False,
+    "chain-jendl-5-fast.xml": False,
+}
 
 # 'None' downloads the archive during installation.
 # Download the FENDL neutron ACE ZIP manually first, then set its saved path.
@@ -127,6 +140,7 @@ EXPECTED_SHA256 = {}
 
 print("Data directory:", ROOT)
 print("Install data:", APPLY)
+print("Selected:", [name for name, selected in INSTALL.items() if selected])
 
 
 # ## Sources
@@ -167,19 +181,27 @@ CHAIN_URLS = {
 # In[ ]:
 
 
+def progress(items, **kwargs):
+    # Notebook progress bars, without a tqdm dependency for the exported script.
+    if "ipykernel" in sys.modules:
+        from tqdm.auto import tqdm
+        return tqdm(items, **kwargs)
+    return items
+
+
+def blocks(stream, desc, total=None):
+    chunk_size = 2**20
+    count = (total + chunk_size - 1) // chunk_size if total is not None else None
+    items = iter(lambda: stream.read(chunk_size), b"")
+    return progress(items, desc=desc, total=count, unit="MiB")
+
+
 def check_sha256(key, path):
     """Verify against a supplied reference, or record the hash without verification."""
     digest = hashlib.sha256()
-    with Path(path).open("rb") as stream, tqdm(
-        total=Path(path).stat().st_size,
-        desc=f"SHA-256 {key}",
-        unit="B",
-        unit_scale=True,
-        unit_divisor=1024,
-    ) as progress:
-        for block in iter(lambda: stream.read(2**20), b""):
+    with Path(path).open("rb") as stream:
+        for block in blocks(stream, f"SHA-256 {key}", Path(path).stat().st_size):
             digest.update(block)
-            progress.update(len(block))
     actual = digest.hexdigest()
     expected = EXPECTED_SHA256.get(key)
     if expected is not None:
@@ -216,16 +238,8 @@ def download(key, url):
         with urllib.request.urlopen(request, timeout=120) as response, partial.open("wb") as output:
             length = response.headers.get("Content-Length")
             total = int(length) if length and length.isdigit() else None
-            with tqdm(
-                total=total,
-                desc=f"Download {key}",
-                unit="B",
-                unit_scale=True,
-                unit_divisor=1024,
-            ) as progress:
-                for block in iter(lambda: response.read(2**20), b""):
-                    output.write(block)
-                    progress.update(len(block))
+            for block in blocks(response, f"Download {key}", total):
+                output.write(block)
         partial.replace(archive)
     check_sha256(key, archive)
     return archive
@@ -284,6 +298,8 @@ def normalize_index(index):
 
 
 for key, url in HDF5_URLS.items():
+    if not INSTALL[key]:
+        continue
     destination = ROOT / key
     if (destination / "cross_sections.xml").is_file():
         print(key, "already installed")
@@ -314,51 +330,52 @@ for key, url in HDF5_URLS.items():
 # In[ ]:
 
 
-destination = ROOT / "fendl-3.2c"
-if (destination / "cross_sections.xml").is_file():
-    print("FENDL-3.2c already installed")
-elif not APPLY:
-    print("Convert", LOCAL_ARCHIVES["fendl-3.2c"], "->", destination)
-else:
-    import openmc.data
-
-    if destination.exists():
-        raise FileExistsError(destination)
-    archive = Path(LOCAL_ARCHIVES["fendl-3.2c"]).expanduser()
-    check_sha256("fendl-3.2c", archive)
-    stage = ROOT / "_staging" / "fendl-3.2c"
-    if stage.exists():
-        # Reuse a completed extraction after checking the archive's file inventory.
-        with zipfile.ZipFile(archive) as zf:
-            for member in zf.infolist():
-                target = stage / member.filename
-                target.resolve().relative_to(stage.resolve())
-                if not member.is_dir() and (
-                    not target.is_file() or target.stat().st_size != member.file_size
-                ):
-                    raise ValueError(f"Incomplete extraction: {target}. Remove {stage} and rerun.")
-        print("Using extracted archive:", stage)
+if INSTALL["fendl-3.2c"]:
+    destination = ROOT / "fendl-3.2c"
+    if (destination / "cross_sections.xml").is_file():
+        print("FENDL-3.2c already installed")
+    elif not APPLY:
+        print("Convert", LOCAL_ARCHIVES["fendl-3.2c"], "->", destination)
     else:
-        stage = unpack(archive, "fendl-3.2c")
-    # IAEA uses extensionless ACE filenames; .xsd files are metadata.
-    ace_directory = stage / "neutron" / "ace"
-    ace_files = sorted(p for p in ace_directory.glob("*")
-                       if p.is_file() and p.suffix in ("", ".ace"))
-    if not ace_files:
-        raise ValueError(f"No neutron ACE tables found in {ace_directory}")
-    neutron = destination / "neutron"
-    neutron.mkdir(parents=True)
-    library = openmc.data.DataLibrary()
-    for ace in tqdm(ace_files, desc="Convert FENDL-3.2c", unit="file"):
-        data = openmc.data.IncidentNeutron.from_ace(ace)
-        output = neutron / (data.name + ".h5")
-        if output.exists():
-            raise FileExistsError(output)
-        data.export_to_hdf5(output)
-        library.register_file(output)
-    library.export_to_xml(destination / "cross_sections.xml")
-    normalize_index(destination / "cross_sections.xml")
-    print("Converted", len(ace_files), "ACE files")
+        import openmc.data
+
+        if destination.exists():
+            raise FileExistsError(destination)
+        archive = Path(LOCAL_ARCHIVES["fendl-3.2c"]).expanduser()
+        check_sha256("fendl-3.2c", archive)
+        stage = ROOT / "_staging" / "fendl-3.2c"
+        if stage.exists():
+            # Reuse a completed extraction after checking the archive's file inventory.
+            with zipfile.ZipFile(archive) as zf:
+                for member in zf.infolist():
+                    target = stage / member.filename
+                    target.resolve().relative_to(stage.resolve())
+                    if not member.is_dir() and (
+                        not target.is_file() or target.stat().st_size != member.file_size
+                    ):
+                        raise ValueError(f"Incomplete extraction: {target}. Remove {stage} and rerun.")
+            print("Using extracted archive:", stage)
+        else:
+            stage = unpack(archive, "fendl-3.2c")
+        # IAEA uses extensionless ACE filenames; .xsd files are metadata.
+        ace_directory = stage / "neutron" / "ace"
+        ace_files = sorted(p for p in ace_directory.glob("*")
+                           if p.is_file() and p.suffix in ("", ".ace"))
+        if not ace_files:
+            raise ValueError(f"No neutron ACE tables found in {ace_directory}")
+        neutron = destination / "neutron"
+        neutron.mkdir(parents=True)
+        library = openmc.data.DataLibrary()
+        for ace in progress(ace_files, desc="Convert FENDL-3.2c", unit="file"):
+            data = openmc.data.IncidentNeutron.from_ace(ace)
+            output = neutron / (data.name + ".h5")
+            if output.exists():
+                raise FileExistsError(output)
+            data.export_to_hdf5(output)
+            library.register_file(output)
+        library.export_to_xml(destination / "cross_sections.xml")
+        normalize_index(destination / "cross_sections.xml")
+        print("Converted", len(ace_files), "ACE files")
 
 
 # ## 3. Install WMP data
@@ -369,22 +386,23 @@ else:
 # In[ ]:
 
 
-destination = ROOT / "wmp" / "WMP_Library"
-if destination.is_dir() and any(destination.rglob("*.h5")):
-    print("WMP already installed")
-else:
-    archive = download("wmp", WMP_URL)
-    if APPLY:
-        if destination.exists():
-            raise FileExistsError(destination)
-        stage = unpack(archive, "wmp")
-        folders = [p for p in stage.rglob("WMP_Library")
-                   if p.is_dir() and any(p.rglob("*.h5"))]
-        if len(folders) != 1:
-            raise ValueError("Expected one WMP_Library directory containing HDF5 files")
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.move(str(folders[0]), str(destination))
-        print("Installed", destination)
+if INSTALL["wmp"]:
+    destination = ROOT / "wmp" / "WMP_Library"
+    if destination.is_dir() and any(destination.rglob("*.h5")):
+        print("WMP already installed")
+    else:
+        archive = download("wmp", WMP_URL)
+        if APPLY:
+            if destination.exists():
+                raise FileExistsError(destination)
+            stage = unpack(archive, "wmp")
+            folders = [p for p in stage.rglob("WMP_Library")
+                       if p.is_dir() and any(p.rglob("*.h5"))]
+            if len(folders) != 1:
+                raise ValueError("Expected one WMP_Library directory containing HDF5 files")
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(folders[0]), str(destination))
+            print("Installed", destination)
 
 
 # ## 4. Install depletion chains
@@ -396,6 +414,8 @@ else:
 
 
 for name, url in CHAIN_URLS.items():
+    if not INSTALL[name]:
+        continue
     destination = ROOT / "chains" / name
     if destination.is_file():
         print(name, "already installed")

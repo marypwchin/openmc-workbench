@@ -27,7 +27,7 @@ The GitHub workflows use YAML (`.yml`); Python packaging settings use TOML (`.to
 
 ### Nuclear-data paths for Python and C++
 
-![The same nuclear-data location is made available to Python and C++ through the configuration module.](images/data-paths.png)
+![The same nuclear-data location is made available to Python and C++ through the configuration module.](images/data-paths.svg)
 
 The nuclear-data libraries reside outside the repository. Set their location once in `data_root.txt`, as described under [Nuclear-data paths](../README.md#nuclear-data-paths).
 
@@ -44,7 +44,7 @@ There are two kinds of changes to distinguish: **copying shared text** and **gen
 
 ### Shared text between README.md and index.md
 
-![Side-by-side mockups of README.md and index.md. The matching numbered sections, filled with gray scribbled text, show what is copied from README to index.](images/readme-index-sync.png)
+![Side-by-side mockups of README.md and index.md. The matching numbered sections, filled with gray scribbled text, show what is copied from README to index.](images/readme-index-sync.svg)
 
 `README.md` is the source for the **title**, **introduction**, **Nuts and bolts** subsections, **nuclear-data paths**, **compilers and libraries** link, and **status**. `scripts/update_structure.py` copies them into `index.md`, even though the two pages arrange some sections differently. Edit this shared material in `README.md`, not `index.md`.
 
@@ -54,7 +54,7 @@ Other parts are intentionally different: the logo, badges, and **Read online** l
 
 ### Notebook outlines and exploration lists
 
-![Notebook and source files, myst.yml, and README.md feed the documentation script, which produces notebook outlines, a README directory tree, and index tables.](images/content-generation.png)
+![Notebook and source files, myst.yml, and README.md feed the documentation script, which produces notebook outlines, a README directory tree, and index tables.](images/content-generation.svg)
 
 `scripts/update_structure.py` reads Markdown headings (`#`, `##`, `###`, and so on) from each notebook and builds the outline near its beginning. Headings in fenced code examples are ignored. Use one `#` title per notebook and `##` or `###` for sections; underlined and HTML headings are not supported.
 
@@ -113,7 +113,7 @@ The hook runs before each commit and must be installed in each new clone. The fi
 
 ## 4. Run the checks
 
-![Local files go through pre-commit checks before a commit, then GitHub Actions checks. Scientific validation remains separate.](images/checks-flow.png)
+![Local files go through pre-commit checks before a commit, then GitHub Actions checks. Scientific validation remains separate.](images/checks-flow.svg)
 
 Run all configured checks with:
 

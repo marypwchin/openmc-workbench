@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1210" height="909" viewBox="0 0 1210 909" role="img" aria-labelledby="title desc">
+<title id="title">Four ways to define materials in OpenMC</title>
+<desc id="desc">Four contrasting methods of constructing OpenMC materials: conventional repeated add_element calls with raw numbers, a pandas DataFrame and loop, a PNNL JSON material library, and the neutronics_material_maker API.</desc>
+<defs>
+<style>
+  .sans {font-family: 'DejaVu Sans', Arial, sans-serif;}
+  .mono {font-family: 'DejaVu Sans Mono', Consolas, monospace;}
+  .eyebrow {font: 700 13.5px 'DejaVu Sans', Arial, sans-serif; letter-spacing:1.4px; fill:#55687D;}
+  .headline {font: 700 42px 'DejaVu Sans', Arial, sans-serif; fill:#243746;}
+  .sub {font: 400 24px 'DejaVu Sans', Arial, sans-serif; fill:#56697D;}
+  .column {font: 600 13px 'DejaVu Sans', Arial, sans-serif; fill:#607180; letter-spacing:1.4px;}
+  .method {font: 600 21px 'DejaVu Sans', Arial, sans-serif; fill:#243746;}
+  .description {font: 16px 'DejaVu Sans', Arial, sans-serif; fill:#596D7C;}
+  .code {font: 15.5px 'DejaVu Sans Mono', Consolas, monospace; fill:#243746;}
+  .out {font: 600 16px 'DejaVu Sans Mono', Consolas, monospace; fill:#4B6170;}
+  .small {font: 14px 'DejaVu Sans', Arial, sans-serif; fill:#718491;}
+</style>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#9AABB6"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fff"/>
+<text x="54" y="56" class="eyebrow">OPENMC WORKBENCH / MATERIALS</text>
+<text x="54" y="116" class="headline">Four ways to define materials in OpenMC</text>
+<text x="54" y="154" class="sub">They differ in how composition and density are supplied to OpenMC.</text>
+<g transform="translate(0 65)">
+<text x="51" y="128" class="column">METHOD</text>
+<text x="360" y="128" class="column">HOW IT IS BUILT</text>
+<text x="1000" y="128" class="column">OUTPUT</text>
+<rect x="34" y="146" width="1142" height="150" rx="12" fill="#FFFFFF" stroke="#E0E7EC" stroke-width="1.2"/>
+<rect x="34" y="146" width="7" height="150" rx="3" fill="#4477AA"/>
+<circle cx="70" cy="188" r="19" fill="#4477AA"/>
+<text x="70" y="194" class="sans" fill="#fff" text-anchor="middle">01</text>
+<text x="103" y="195" class="method">Conventional</text>
+<text x="52" y="239" class="description">Enter raw numbers in</text>
+<text x="52" y="261" class="description">repeated add_element() calls</text>
+<rect x="347" y="158" width="601" height="125" rx="8" fill="#F6F8FA"/>
+<text x="363" y="179" class="code">mat.add_element('C', 0.001384)</text>
+<text x="363" y="206" class="code">mat.add_element('Mn', 0.020165)</text>
+<text x="363" y="233" class="code">...</text>
+<text x="363" y="260" class="code">mat.set_density('g/cm3', 8.0)</text>
+<path d="M 955 221 H 983" fill="none" stroke="#9AABB6" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="993" y="188" width="169" height="66" rx="8" fill="#FAFBFC" stroke="#DEE6EB"/>
+<text x="1008" y="214" class="out">openmc.</text>
+<text x="1008" y="236" class="out">Material</text>
+<rect x="34" y="310" width="1142" height="150" rx="12" fill="#FFFFFF" stroke="#E0E7EC" stroke-width="1.2"/>
+<rect x="34" y="310" width="7" height="150" rx="3" fill="#EE6677"/>
+<circle cx="70" cy="352" r="19" fill="#EE6677"/>
+<text x="70" y="358" class="sans" fill="#fff" text-anchor="middle">02</text>
+<text x="103" y="359" class="method">Programmatic</text>
+<text x="52" y="403" class="description">Loop over a predefined</text>
+<text x="52" y="425" class="description">DataFrame</text>
+<rect x="347" y="322" width="601" height="125" rx="8" fill="#F6F8FA"/>
+<text x="363" y="352" class="code">for name, dat in mats_df.groupby('name'):</text>
+<text x="400.4" y="380" class="code">for _, row in dat.drop(columns='name').iterrows():</text>
+<text x="437.8" y="408" class="code">mats_prog[name].add_element(**row.dropna().to_dict())</text>
+<path d="M 955 385 H 983" fill="none" stroke="#9AABB6" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="993" y="352" width="169" height="66" rx="8" fill="#FAFBFC" stroke="#DEE6EB"/>
+<text x="1008" y="378" class="out">openmc.</text>
+<text x="1008" y="400" class="out">Material</text>
+<rect x="34" y="474" width="1142" height="150" rx="12" fill="#FFFFFF" stroke="#E0E7EC" stroke-width="1.2"/>
+<rect x="34" y="474" width="7" height="150" rx="3" fill="#228833"/>
+<circle cx="70" cy="516" r="19" fill="#228833"/>
+<text x="70" y="522" class="sans" fill="#fff" text-anchor="middle">03</text>
+<text x="103" y="523" class="method">PNNL JSON</text>
+<text x="52" y="567" class="description">Read material compositions</text>
+<text x="52" y="589" class="description">and densities from PNNL JSON</text>
+<rect x="347" y="486" width="601" height="125" rx="8" fill="#F6F8FA"/>
+<text x="363" y="507" class="code">data = pnnl['materials'][name]</text>
+<text x="363" y="534" class="code">for element, fraction in data['elements'].items():</text>
+<text x="400.4" y="561" class="code">mat.add_element(element, fraction, ...)</text>
+<text x="363" y="588" class="code">mat.set_density(pnnl['density_units'], data['density'])</text>
+<path d="M 955 549 H 983" fill="none" stroke="#9AABB6" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="993" y="516" width="169" height="66" rx="8" fill="#FAFBFC" stroke="#DEE6EB"/>
+<text x="1008" y="542" class="out">openmc.</text>
+<text x="1008" y="564" class="out">Material</text>
+<rect x="34" y="638" width="1142" height="150" rx="12" fill="#FFFFFF" stroke="#E0E7EC" stroke-width="1.2"/>
+<rect x="34" y="638" width="7" height="150" rx="3" fill="#CCBB44"/>
+<circle cx="70" cy="680" r="19" fill="#CCBB44"/>
+<text x="70" y="686" class="sans" fill="#243746" text-anchor="middle">04</text>
+<text x="103" y="687" class="method">NMM library</text>
+<text x="52" y="731" class="description">Create materials with</text>
+<text x="52" y="753" class="description">NMM's library</text>
+<rect x="347" y="650" width="601" height="125" rx="8" fill="#F6F8FA"/>
+<text x="363" y="680" class="code">mat = nmm.Material.from_library(</text>
+<text x="400.4" y="708" class="code">name=name</text>
+<text x="363" y="736" class="code">).openmc_material</text>
+<path d="M 955 713 H 983" fill="none" stroke="#9AABB6" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="993" y="680" width="169" height="66" rx="8" fill="#FAFBFC" stroke="#DEE6EB"/>
+<text x="1008" y="706" class="out">openmc.</text>
+<text x="1008" y="728" class="out">Material</text>
+</g>
+</svg>

@@ -1,13 +1,13 @@
 # OpenMC Workbench — Matplotlib style
 # Categorical palette: Paul Tol, Bright (published order)
-# Continuous colormap: inferno_r
+# Continuous colormap: inferno_r (default)
+# Diverging colormap: RdBu (select explicitly for reference-centered comparisons)
+# For FOM ratios, use LogNorm with reciprocal limits so 1 is centered.
 # Note: in .mplstyle files, write hexadecimal colors without leading #.
 # Markers are spaced along curves rather than drawn at every sample.
-
 # Data colors
 axes.prop_cycle: cycler(color=['4477AA', 'EE6677', '228833', 'CCBB44', '66CCEE', 'AA3377', 'BBBBBB']) + cycler(marker=['o', 's', '^', 'D', 'v', 'P', 'X']) + cycler(markevery=[0.12, 0.12, 0.12, 0.12, 0.12, 0.12, 0.12])
 image.cmap: inferno_r
-
 # Typography
 font.family: DejaVu Sans
 font.size: 10.5
@@ -26,7 +26,6 @@ axes.labelcolor: 243746
 lines.linewidth: 1.8
 lines.markersize: 4.5
 lines.markeredgewidth: 0.75
-
 # Axes and grid
 axes.edgecolor: 87949E
 axes.linewidth: 0.8

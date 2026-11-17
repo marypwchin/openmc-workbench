@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use OpenMC Workbench in research, please cite it."
+type: software
+title: OpenMC Workbench
+authors:
+  - family-names: Chin
+    given-names: Mary P. W.
+repository-code: https://github.com/marypwchin/openmc-workbench
+url: https://marypwchin.github.io/openmc-workbench/
+license: Apache-2.0

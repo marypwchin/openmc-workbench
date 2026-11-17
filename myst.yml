@@ -8,12 +8,14 @@ project:
   toc:
     - file: index.md
     - title: Nuclear data
+      file: 0_nuclear_data/README.md
       children:
         - pattern: 0_nuclear_data/*.ipynb
     - title: Cross sections
       children:
         - pattern: 1_cross_sections/*.ipynb
     - title: Materials
+      file: 2_materials/README.md
       children:
         - pattern: 2_materials/*.ipynb
     - title: Geometry
@@ -21,6 +23,7 @@ project:
       children:
         - pattern: 3_geometry/*.ipynb
     - title: Run on a single machine
+      file: 4_run/README.md
       children:
         - pattern: 4_run/*.ipynb
     - title: Run in parallel
