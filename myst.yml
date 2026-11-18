@@ -27,7 +27,9 @@ project:
       children:
         - pattern: 4_run/*.ipynb
     - title: Run in parallel
-      file: 5_MPI_HPC_HTC/README.md
+      file: 5_MPI_OpenMP_Slurm/README.md
+      children:
+        - pattern: 5_MPI_OpenMP_Slurm/*.ipynb
     - file: docs/compilers_and_libraries.md
 site:
   template: book-theme

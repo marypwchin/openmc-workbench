@@ -1,8 +1,9 @@
-"""Update notebook outlines and exploration lists; --check changes nothing."""
+"""Update notebook outlines and generated Workbench navigation; --check changes nothing."""
 import argparse
 import json
 import re
 import subprocess
+from html import escape
 from pathlib import Path
 
 from openmc_api_index import openmc_methods
@@ -13,6 +14,8 @@ END = '<!-- /generated:structure -->'
 DESC_START = '<!-- index:description -->'
 DESC_END = '<!-- /index:description -->'
 INDEX_START = '<!-- generated:notebooks -->'
+GALLERY_START = '<!-- generated:gallery -->'
+GALLERY_END = '<!-- /generated:gallery -->'
 INDEX_END = '<!-- /generated:notebooks -->'
 NOTES_START = '<!-- generated:exploration-notes -->'
 NOTES_END = '<!-- /generated:exploration-notes -->'
@@ -164,28 +167,108 @@ def exploration_paths(paths):
     )
 
 
-def readme_text(paths):
-    def nodes(mapping):
-        return [(name + ('/' if value else ''), nodes(value))
-                for name, value in sorted(mapping.items(), key=lambda pair: (not bool(pair[1]), pair[0]))]
+def gallery_images(paths):
+    """All section-level SVG diagrams, in directory and filename order.
 
-    def render_tree(selected):
-        nested = {}
-        for path in selected:
-            node = nested
-            for part in Path(path).parts:
-                node = node.setdefault(part, {})
-        return '```text\n' + '\n'.join(['.'] + tree_lines(nodes(nested))) + '\n```'
-    # Show numbered notebooks, Python scripts, and C++ programs.
-    selected = exploration_paths(paths)
-    generated = START + '\n' + render_tree(selected) + '\n' + END
+    Keep gallery illustrations beside their section's README, rather than in
+    output directories containing scientific SVG plots.
+    """
+    images = []
+    for name in paths:
+        file = Path(name)
+        if (len(file.parts) == 2 and file.suffix.lower() == '.svg'
+                and re.match(r'^\d+_', file.parent.name)):
+            images.append(file.as_posix())
+    return sorted(images)
+
+
+def gallery_pages():
+    """Markdown and notebook pages listed in the MyST table of contents."""
+    pages = set()
+    text = (ROOT / 'myst.yml').read_text(encoding='utf-8')
+    for line in text.splitlines():
+        item = re.match(r'^\s*-\s+(file|pattern):\s*(.*?)\s*$', line)
+        if item is None:
+            continue
+        kind, value = item.groups()
+        value = value.split(' #', 1)[0].strip().strip('"\'')
+        if kind == 'file':
+            pages.add(value)
+        else:
+            for path in ROOT.glob(value):
+                if path.is_file() and path.suffix in {'.md', '.ipynb'}:
+                    pages.add(path.relative_to(ROOT).as_posix())
+    return pages
+
+
+def gallery_items(paths):
+    """Discover image, caption and destination once for README and MyST."""
+    known = set(paths)
+    published = gallery_pages()
+    entries = []
+    for image in gallery_images(paths):
+        folder = Path(image).parent
+        readme = (folder / 'README.md').as_posix()
+        notebooks = sorted(p for p in known
+                           if Path(p).parent == folder and p.endswith('.ipynb'))
+
+        # Prefer a notebook that actually references the SVG, otherwise the
+        # first notebook in the section. Section README is the main entrance.
+        matched = [p for p in notebooks
+                   if Path(image).name in (ROOT / p).read_text(encoding='utf-8')]
+        first_notebook = (matched or notebooks or [None])[0]
+        target = readme if readme in known else first_notebook
+        if target is None:
+            target = folder.as_posix()  # GitHub section browser
+
+        if readme in published and readme in known:
+            myst_target = readme
+        elif any(p in published for p in (matched + notebooks)):
+            myst_target = next(p for p in (matched + notebooks) if p in published)
+        else:
+            myst_target = code_url(target) if target != folder.as_posix() else (
+                code_url(target).replace('/blob/main/', '/tree/main/'))
+
+        caption = Path(image).stem.replace('_', ' ')
+        caption = re.sub(r'^openmc ', 'OpenMC ', caption, flags=re.I)
+        entries.append((image, caption, target, myst_target))
+    return entries
+
+
+def readme_gallery(entries):
+    """Inline linked images wrap naturally in GitHub's sanitized HTML."""
+    lines = ['<p>']
+    for image, caption, target, _ in entries:
+        lines.append(
+            f'  <a href="{escape(target, quote=True)}">'
+            f'<img src="{escape(image, quote=True)}" '
+            f'alt="{escape(caption, quote=True)}" width="280"></a>'
+        )
+    lines.append('</p>')
+    return '\n'.join(lines)
+
+
+def myst_gallery(entries):
+    """MyST-native responsive grid: 1, 1, 2 or 3 columns by width."""
+    lines = ['::::{grid} 1 1 2 3', ':gutter: 2', '']
+    for image, caption, _, target in entries:
+        # No explicit row or column counts; partial final rows work naturally.
+        lines.extend([':::{grid-item}',
+                      f'[![{caption}]({image})]({target})',
+                      ':::', ''])
+    lines.append('::::')
+    return '\n'.join(lines)
+
+
+def readme_text(paths):
+    entries = gallery_items(paths)
+    generated = START + '\n' + readme_gallery(entries) + '\n' + END
     text = (ROOT / 'README.md').read_text(encoding='utf-8')
-    # The generated block may appear under any heading, regardless of its title.
     if (text.count(START) != 1 or text.count(END) != 1
             or text.index(START) >= text.index(END)):
         raise ValueError('README.md needs exactly one complete generated:structure block')
     pattern = re.escape(START) + r'.*?' + re.escape(END)
-    text, count = re.subn(pattern, lambda _: generated, text, flags=re.S)
+    text, count = re.subn(pattern, lambda _: generated, text, count=1, flags=re.S)
     if count != 1:
         raise ValueError('README.md needs exactly one complete generated:structure block')
     return text
@@ -300,6 +383,16 @@ def index_text(paths, readme):
         text, n = re.subn(pattern, lambda _: replacement, text, count=1, flags=re.S)
         if n != 1:
             raise ValueError(f'Missing shared {section} markers in index.md')
+
+    # Regenerate the gallery inside markers introduced by the one-time patch.
+    gallery = (GALLERY_START + '\n' + myst_gallery(gallery_items(paths))
+               + '\n' + GALLERY_END)
+    if (text.count(GALLERY_START) != 1 or text.count(GALLERY_END) != 1
+            or text.index(GALLERY_START) >= text.index(GALLERY_END)
+            or text.index(GALLERY_END) >= text.index(INDEX_START)):
+        raise ValueError('index.md needs one generated:gallery block before generated:notebooks')
+    gallery_pattern = re.escape(GALLERY_START) + r'.*?' + re.escape(GALLERY_END)
+    text = re.sub(gallery_pattern, lambda _: gallery, text, count=1, flags=re.S)
 
     pattern = re.escape(INDEX_START) + r'(.*?)' + re.escape(INDEX_END)
     match = re.search(pattern, text, flags=re.S)

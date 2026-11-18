@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1450 1190" width="1450" height="1190" role="img" aria-labelledby="title desc">
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-68.33333 0.00000 1586.66667 1190.00000" width="1200" height="900" role="img" aria-labelledby="title desc">
 <title id="title">From a 28x31 character map to OpenMC geometries</title>
 <desc id="desc">A 28-by-31 character map branches into red RectLattice and green CSG geometry representations.</desc>
 <defs>
@@ -15,7 +16,7 @@
     .mono{font:600 12.5px "DejaVu Sans Mono", Menlo, Consolas, monospace;fill:#2A3D58}
   </style>
 </defs>
-<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="-68.33333333333337" y="0.0" width="1586.6666666666667" height="1190.0" fill="#FFFFFF"/><rect width="100%" height="100%" fill="#ffffff"/>
 <text x="54" y="56" class="eyebrow">OPENMC WORKBENCH / GEOMETRY FOR VARIANCE REDUCTION</text>
 <text x="54" y="116" class="headline">From a 28x31 character map to OpenMC geometries</text>
 <text x="54" y="154" class="sub">A Pac-Man maze.</text>

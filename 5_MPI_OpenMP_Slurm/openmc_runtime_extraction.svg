@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="-3.33333 0.00000 1126.66667 845.00000" role="img" aria-label="Different ways to extract runtime data">
+  <title>Different ways to extract runtime data</title>
+  <desc>Three methods converge on shared OpenMC runtime measurements and provide complementary fields: stdout logs include MPI and OpenMP counts and active calculation rate, while StatePoint and h5py expose writing statepoints.</desc>
+  <style>
+    text {font-family: Arial, Helvetica, sans-serif;}
+    .kicker {font-size:14px;letter-spacing:1.85px;font-weight:700;fill:#4477AA;}
+    .title {font-size:37px;font-weight:700;fill:#202D3A;}
+    .subtitle {font-size:17px;fill:#576676;}
+    .micro {font-size:12px;letter-spacing:1.5px;font-weight:700;fill:#576676;}
+    .name {font-size:21px;font-weight:700;fill:#202D3A;}
+    .detail {font-size:15px;fill:#576676;}
+    .attr {font-size:18px;fill:#202D3A;font-family:Arial,Helvetica,sans-serif;}
+  </style>
+  <rect x="-3.3333333333333712" y="0.0" width="1126.6666666666667" height="845.0" fill="#FFFFFF"/><rect width="1120" height="830" fill="#FFFFFF"/>
+  <text class="kicker" x="64" y="55">OPENMC WORKBENCH / RUNTIME DATA</text>
+  <text class="title" x="64" y="105">Ways to extract runtime data</text>
+  <text class="subtitle" x="64" y="139">Various timing fields.</text>
+  <path d="M64 163 H1056" stroke="#DAE1E7" stroke-width="1.5"/>
+
+  <text class="micro" x="64" y="209">DATA EXTRACTION</text>
+  <!-- Source: stdout -->
+  <rect x="64" y="227" width="478" height="94" rx="10" fill="#FFFFFF" stroke="#DAE1E7" stroke-width="1.5"/>
+  <rect x="64" y="227" width="5" height="94" rx="2.5" fill="#4477AA"/>
+  <g transform="translate(83 250)" fill="none" stroke="#4477AA" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 0h25l10 10v35H6z M31 0v10h10 M14 21h20 M14 29h20 M14 37h14"/>
+  </g>
+  <text x="150" y="266" class="name">stdout logs</text>
+  <text x="150" y="291" class="detail">Parse runtime lines from the log</text>
+
+  <!-- Source: StatePoint -->
+  <rect x="64" y="353" width="478" height="94" rx="10" fill="#FFFFFF" stroke="#DAE1E7" stroke-width="1.5"/>
+  <rect x="64" y="353" width="5" height="94" rx="2.5" fill="#228833"/>
+  <g transform="translate(83 376)" fill="none" stroke="#228833" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="1" y="2" width="43" height="42" rx="5"/>
+    <path d="M12 16l-6 7 6 7 M33 16l6 7-6 7 M27 12l-8 23"/>
+  </g>
+  <text x="150" y="392" class="name">openmc.StatePoint</text>
+  <text x="150" y="417" class="detail">Read <tspan font-family="monospace">sp.runtime</tspan></text>
+
+  <!-- Source: h5py -->
+  <rect x="64" y="479" width="478" height="94" rx="10" fill="#FFFFFF" stroke="#DAE1E7" stroke-width="1.5"/>
+  <rect x="64" y="479" width="5" height="94" rx="2.5" fill="#AA3377"/>
+  <g transform="translate(83 502)" fill="none" stroke="#AA3377" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="23" cy="7" rx="20" ry="6"/>
+    <path d="M3 7v30c0 8 40 8 40 0V7 M3 20c0 8 40 8 40 0 M3 31c0 8 40 8 40 0"/>
+  </g>
+  <text x="150" y="518" class="name">h5py / HDF5</text>
+  <text x="150" y="543" class="detail">Read <tspan font-family="monospace">/runtime</tspan> datasets</text>
+
+  <!-- Three paths joined together -->
+  <path d="M542 274 H654 M542 400 H654 M542 526 H654" stroke="#576676" stroke-width="2.2" fill="none"/>
+  <circle cx="654" cy="274" r="5" fill="#4477AA"/>
+  <circle cx="654" cy="400" r="5" fill="#228833"/>
+  <circle cx="654" cy="526" r="5" fill="#AA3377"/>
+  <path d="M654 274 V526" stroke="#576676" stroke-width="2.2" fill="none"/>
+  <circle cx="654" cy="400" r="8" fill="#FFFFFF" stroke="#202D3A" stroke-width="2.3"/>
+  <path d="M662 400 H732" stroke="#202D3A" stroke-width="2.6" fill="none"/>
+  <path d="M734 400 l-10 -6 v12 z" fill="#202D3A"/>
+
+  <!-- Named runtime attributes -->
+  <rect x="749" y="221" width="307" height="368" rx="12" fill="#F7FAFD" stroke="#4477AA" stroke-width="1.6"/>
+  <text x="772" y="253" class="micro">RUNTIME ATTRIBUTES</text>
+  <path d="M772 268 H1033" stroke="#DAE1E7" stroke-width="1.2"/>
+  <g class="attr">
+    <text x="772" y="301">total initialization</text>
+    <text x="772" y="340">reading cross sections</text>
+    <text x="772" y="379">simulation</text>
+    <text x="772" y="418">transport</text>
+    <text x="772" y="457">active batches</text>
+    <text x="772" y="496">accumulating tallies</text>
+    <text x="772" y="535">total</text>
+  </g>
+  <!-- Additional fields distinguished by extraction method -->
+  <path d="M64 617 H1056" stroke="#DAE1E7" stroke-width="1.2"/>
+  <text class="micro" x="64" y="651">COMPLEMENTARY FIELDS</text>
+
+  <!-- Stdout: execution configuration and particle rate -->
+  <rect x="64" y="668" width="478" height="128" rx="10" fill="#F7FAFD" stroke="#DAE1E7" stroke-width="1.4"/>
+  <rect x="64" y="668" width="5" height="128" rx="2.5" fill="#4477AA"/>
+  <text x="88" y="696" font-size="16" font-weight="700" fill="#4477AA">Only in stdout logs</text>
+  <text class="detail" x="88" y="727">OpenMP Threads</text>
+  <text class="detail" x="88" y="754">MPI Processes</text>
+  <text class="detail" x="88" y="781">active histories/s</text>
+
+  <!-- Runtime field in StatePoint and raw HDF5 -->
+  <rect x="578" y="668" width="478" height="128" rx="10" fill="#F7FAFD" stroke="#DAE1E7" stroke-width="1.4"/>
+  <rect x="578" y="668" width="5" height="64" rx="2.5" fill="#228833"/>
+  <rect x="578" y="732" width="5" height="64" rx="2.5" fill="#AA3377"/>
+  <text x="602" y="696" font-size="16" font-weight="700" fill="#228833">Only from h5py/HDF5</text>
+  <text class="detail" x="602" y="736">writing statepoints</text>
+  <path d="M64 820 H1056" stroke="#DAE1E7" stroke-width="1.2"/>
+</svg>

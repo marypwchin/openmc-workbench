@@ -85,7 +85,38 @@ plt.style.use(Path(openmc_workbench_config.__file__).with_name('workbench.mplsty
 
 Start with the [setup notebook](0_nuclear_data/0_0_set_up_nuclear_data.ipynb)
 if you wish to reproduce the examples locally. Otherwise, go directly to
-the [ENDF/B-VIII.1 exploration notebook](0_nuclear_data/0_1_explore_endf-b8.1.ipynb).
+the [ENDF/B-VIII.1 exploration notebook](0_nuclear_data/0_1_explore_endf_b81.ipynb).
+
+<!-- generated:gallery -->
+::::{grid} 1 1 2 3
+:gutter: 2
+
+:::{grid-item}
+[![OpenMC exploring endf b81](0_nuclear_data/openmc_exploring_endf_b81.svg)](0_nuclear_data/0_0_set_up_nuclear_data.ipynb)
+:::
+
+:::{grid-item}
+[![material definition methods](2_materials/material_definition_methods.svg)](2_materials/2_0_ways_to_define_materials.ipynb)
+:::
+
+:::{grid-item}
+[![pacman map to geometries](3_geometry/pacman_map_to_geometries.svg)](3_geometry/3_0_ways_to_build_pacman_maze.ipynb)
+:::
+
+:::{grid-item}
+[![tritium breeding context](4_run/tritium_breeding_context.svg)](4_run/4_0_breeder_tritium_neutron_maps.ipynb)
+:::
+
+:::{grid-item}
+[![OpenMC computing platforms](5_MPI_OpenMP_Slurm/openmc_computing_platforms.svg)](5_MPI_OpenMP_Slurm/5_1_runtime_metrics_from_multisystems_runs.ipynb)
+:::
+
+:::{grid-item}
+[![OpenMC runtime extraction](5_MPI_OpenMP_Slurm/openmc_runtime_extraction.svg)](5_MPI_OpenMP_Slurm/5_1_runtime_metrics_from_multisystems_runs.ipynb)
+:::
+
+::::
+<!-- /generated:gallery -->
 
 <!-- generated:notebooks -->
 ### Nuclear data
@@ -94,7 +125,7 @@ the [ENDF/B-VIII.1 exploration notebook](0_nuclear_data/0_1_explore_endf-b8.1.ip
 | --- | --- | --- |
 | [`0_0_set_up_nuclear_data.ipynb`](0_nuclear_data/0_0_set_up_nuclear_data.ipynb) | Install nuclear-data libraries, windowed multipole data, and depletion chains; check the resulting file layout. | [`DataLibrary.export_to_xml()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.DataLibrary.html#openmc.data.DataLibrary.export_to_xml), [`DataLibrary.register_file()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.DataLibrary.html#openmc.data.DataLibrary.register_file), [`IncidentNeutron.export_to_hdf5()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.IncidentNeutron.html#openmc.data.IncidentNeutron.export_to_hdf5), [`IncidentNeutron.from_ace()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.IncidentNeutron.html#openmc.data.IncidentNeutron.from_ace) |
 | [`0_0_set_up_nuclear_data.py`](https://github.com/marypwchin/openmc-workbench/blob/main/0_nuclear_data/0_0_set_up_nuclear_data.py) | Install nuclear-data libraries, windowed multipole data, and depletion chains; check the resulting file layout. | [`DataLibrary.export_to_xml()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.DataLibrary.html#openmc.data.DataLibrary.export_to_xml), [`DataLibrary.register_file()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.DataLibrary.html#openmc.data.DataLibrary.register_file), [`IncidentNeutron.export_to_hdf5()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.IncidentNeutron.html#openmc.data.IncidentNeutron.export_to_hdf5), [`IncidentNeutron.from_ace()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.IncidentNeutron.html#openmc.data.IncidentNeutron.from_ace) |
-| [`0_1_explore_endf-b8.1.ipynb`](0_nuclear_data/0_1_explore_endf-b8.1.ipynb) | Explore `cross_section.xml` and HDF5 data from ENDF/B-VIII.1, comparing direct XML/HDF5 inspection with the OpenMC Python API. | [`DataLibrary.from_xml()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.DataLibrary.html#openmc.data.DataLibrary.from_xml), [`DataLibrary.get_by_material()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.DataLibrary.html#openmc.data.DataLibrary.get_by_material), [`IncidentNeutron.from_hdf5()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.IncidentNeutron.html#openmc.data.IncidentNeutron.from_hdf5) |
+| [`0_1_explore_endf_b81.ipynb`](0_nuclear_data/0_1_explore_endf_b81.ipynb) | Explore `cross_section.xml` and HDF5 data from ENDF/B-VIII.1, comparing direct XML/HDF5 inspection with the OpenMC Python API. | [`DataLibrary.from_xml()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.DataLibrary.html#openmc.data.DataLibrary.from_xml), [`DataLibrary.get_by_material()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.DataLibrary.html#openmc.data.DataLibrary.get_by_material), [`IncidentNeutron.from_hdf5()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.data.IncidentNeutron.html#openmc.data.IncidentNeutron.from_hdf5) |
 | [`0_2_catalog_nuclear_data_libraries.ipynb`](0_nuclear_data/0_2_catalog_nuclear_data_libraries.ipynb) | Build a reference DataFrame cataloging material, MT numbers, and nuclear-data libraries. | — |
 | [`0_3_revisit_HDF5_extract_temperatures.ipynb`](0_nuclear_data/0_3_revisit_HDF5_extract_temperatures.ipynb) | Explore the structure of OpenMC neutron HDF5 files, inspect groups and attributes, extract temperatures, and compare temperature availability across nuclear-data libraries. | — |
 | [`0_4_cross_sections_xml_pugixml.cpp`](https://github.com/marypwchin/openmc-workbench/blob/main/0_nuclear_data/0_4_cross_sections_xml_pugixml.cpp) | Read and explore `cross_sections.xml` in C++ using pugixml. Display the XML elements and their attributes, with an option to choose a nuclear-data library other than the default ENDF/B-VIII.1. | — |
@@ -131,6 +162,7 @@ the [ENDF/B-VIII.1 exploration notebook](0_nuclear_data/0_1_explore_endf-b8.1.ip
 | File | What it covers | OpenMC API |
 | --- | --- | --- |
 | [`5_0_test_mpi.cpp`](https://github.com/marypwchin/openmc-workbench/blob/main/5_MPI_OpenMP_Slurm/5_0_test_mpi.cpp) | A minimal MPI program that verifies initialization and communication between processes by summing values across them, independently of OpenMC. | — |
+| [`5_1_runtime_metrics_from_multisystems_runs.ipynb`](5_MPI_OpenMP_Slurm/5_1_runtime_metrics_from_multisystems_runs.ipynb) | Collect OpenMC runtimes from six different computing systems. To gain familiarity with the OpenMC ecosystem, extract runtime data in three ways: from stdout logs, through `openmc.StatePoint`, and directly from HDF5 files using `h5py`. | [`StatePoint()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.StatePoint.html) |
 <!-- /generated:notebooks -->
 
 ## Nuclear-data paths

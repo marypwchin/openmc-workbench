@@ -34,29 +34,14 @@ Rather than a polished end-user tutorial, the workbench is a record of ongoing e
 ## The workbench at a glance
 
 <!-- generated:structure -->
-```text
-.
-├── 0_nuclear_data/
-│   ├── 0_0_set_up_nuclear_data.ipynb
-│   ├── 0_0_set_up_nuclear_data.py
-│   ├── 0_1_explore_endf-b8.1.ipynb
-│   ├── 0_2_catalog_nuclear_data_libraries.ipynb
-│   ├── 0_3_revisit_HDF5_extract_temperatures.ipynb
-│   ├── 0_4_cross_sections_xml_pugixml.cpp
-│   └── 0_5_inspect_hdf5_reactions.cpp
-├── 1_cross_sections/
-│   ├── 1_0_ways_to_plot.ipynb
-│   └── 1_1_ways_to_convert_to_multigroup.ipynb
-├── 2_materials/
-│   └── 2_0_ways_to_define_materials.ipynb
-├── 3_geometry/
-│   └── 3_0_ways_to_build_pacman_maze.ipynb
-├── 4_run/
-│   ├── 4_0_breeder_tritium_neutron_maps.ipynb
-│   └── 4_1_ways_to_run_and_post_process.ipynb
-└── 5_MPI_OpenMP_Slurm/
-    └── 5_0_test_mpi.cpp
-```
+<p>
+  <a href="0_nuclear_data/README.md"><img src="0_nuclear_data/openmc_exploring_endf_b81.svg" alt="OpenMC exploring endf b81" width="280"></a>
+  <a href="2_materials/README.md"><img src="2_materials/material_definition_methods.svg" alt="material definition methods" width="280"></a>
+  <a href="3_geometry/README.md"><img src="3_geometry/pacman_map_to_geometries.svg" alt="pacman map to geometries" width="280"></a>
+  <a href="4_run/README.md"><img src="4_run/tritium_breeding_context.svg" alt="tritium breeding context" width="280"></a>
+  <a href="5_MPI_OpenMP_Slurm/README.md"><img src="5_MPI_OpenMP_Slurm/openmc_computing_platforms.svg" alt="OpenMC computing platforms" width="280"></a>
+  <a href="5_MPI_OpenMP_Slurm/README.md"><img src="5_MPI_OpenMP_Slurm/openmc_runtime_extraction.svg" alt="OpenMC runtime extraction" width="280"></a>
+</p>
 <!-- /generated:structure -->
 
 ## Nuts and bolts

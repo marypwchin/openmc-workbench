@@ -1,6 +1,6 @@
 # Nuclear data
 
-### Beware of file-size explosion
+## Beware of file-size explosion
 Nuclear-data libraries can take up a substantial amount of disk space after downloading and conversion. Here is what I have:
 
 | Library or data | Installed disk space |
@@ -22,3 +22,9 @@ Two alternative formats are provided:
 The two are alternatives, not sequential steps. Run either one; not both.
 
 A shell (`.sh`) version is not provided because the setup relies substantially on Python libraries, including OpenMC. Reimplementing it in shell would introduce unnecessary duplication.
+
+<p align="center">
+  <img src="openmc_exploring_endf_b81.svg" width="1100">
+</p>
+
+**→** [0_1_explore_endf_b81.ipynb](0_1_explore_endf_b81.ipynb) 
