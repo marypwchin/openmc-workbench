@@ -17,7 +17,7 @@ These are the main files. Paths are relative to the repository root.
 | `data_root.txt` | User-created file pointing to the nuclear-data directory; not committed to Git. |
 | [data_root.example.txt](../data_root.example.txt) | Example to copy when creating `data_root.txt`. |
 | `openmc_workbench_config.hpp` | Generated C++ header; not committed to Git. |
-| [scripts/update_structure.py](../scripts/update_structure.py) | Updates notebook outlines, exploration lists, and text shared by `README.md` and `index.md`. |
+| [scripts/update_structure.py](../scripts/update_structure.py) | Updates notebook outlines, SVG galleries, exploration tables, and text shared by `README.md` and `index.md`. |
 | [scripts/openmc_api_index.py](../scripts/openmc_api_index.py) | Identifies documented OpenMC API calls in `.ipynb` and `.py` files. |
 | [scripts/check_notebooks.py](../scripts/check_notebooks.py) | Checks notebook structure without running cells. |
 | [scripts/check_links.py](../scripts/check_links.py) | Checks local repository links and collects external links for online checking. |
@@ -48,34 +48,38 @@ There are two kinds of changes to distinguish: **copying shared text** and **gen
 
 `README.md` is the source for the **title**, **introduction**, **Nuts and bolts** subsections, **nuclear-data paths**, **compilers and libraries** link, and **status**. `scripts/update_structure.py` copies them into `index.md`, even though the two pages arrange some sections differently. Edit this shared material in `README.md`, not `index.md`.
 
-The two **Nuts and bolts** subsections are **Python and C++** and **Programmatic approach**, including their code examples. The generator places their copies inside `generated:exploration-notes` in `index.md`.
+The **Nuts and bolts** subsections are **Python and C++**, **Programmatic approach**, and **Plotting style**, including their code examples. The generator places their copies inside `generated:exploration-notes` in `index.md`.
 
-Other parts are intentionally different: the logo, badges, and **Read online** link appear only in `README.md`; the **Source repository** link appears only in `index.md`. The exploration lists are also rendered differently, as shown below.
+Other parts are intentionally different: the logo, badges, and Workbench website link appear only in `README.md`; the **Source repository** link appears only in `index.md`. The exploration galleries also use different markup, as described below.
 
-### Notebook outlines and exploration lists
-
-![Notebook and source files, myst.yml, and README.md feed the documentation script, which produces notebook outlines, a README directory tree, and index tables.](images/content-generation.svg)
+### Notebook outlines, SVG galleries, and exploration tables
 
 `scripts/update_structure.py` reads Markdown headings (`#`, `##`, `###`, and so on) from each notebook and builds the outline near its beginning. Headings in fenced code examples are ignored. Use one `#` title per notebook and `##` or `###` for sections; underlined and HTML headings are not supported.
 
-The same script produces two views of the numbered `.ipynb`, `.py`, and `.cpp` explorations:
+The script also generates two views of the Workbench:
 
 | Page | What it shows |
 | --- | --- |
-| `README.md` | **Explorations** first, as a directory tree; **Nuts and bolts** follows. |
-| `index.md` | **Nuts and bolts** first, then **Explorations**, grouped by numbered subdirectory. The tables contain **File**, **What it covers**, and **OpenMC API** columns. |
+| `README.md` | A gallery of clickable SVG thumbnails in `generated:structure`, followed by **Nuts and bolts**. The directory tree has been replaced. |
+| `index.md` | A responsive SVG gallery in `generated:gallery`, followed by the existing **Explorations** tables in `generated:notebooks`. The tables retain the **File**, **What it covers**, and **OpenMC API** columns. |
+
+The gallery discovers `.svg` files directly inside numbered Workbench directories, for example `3_geometry/pacman_map_to_geometries.svg`. Keep these illustrations beside the section's `README.md`; SVG plots in deeper output directories are not included. Prepare the gallery SVGs in the Workbench's 4:3 format. The generator does not resize them; it derives accessible image descriptions from their filenames.
+
+On GitHub, the gallery uses linked inline images that wrap with the available width. MyST uses a responsive grid: one column on narrow screens, two on medium screens, and three on wide screens. Adding a seventh, eighth, or ninth SVG needs no layout change; an incomplete last row is expected.
+
+A thumbnail links to its section `README.md` when available, otherwise to an associated notebook or the section directory on GitHub. On MyST, it prefers a published section README or notebook from `myst.yml`, and falls back to GitHub when necessary. The two galleries are derived from the same discovered images, captions, and destinations.
 
 Notebook descriptions come from the marked description in each notebook's first Markdown title cell. Descriptions of `.py` and `.cpp` files can be edited in the `index.md` tables and are kept on later runs. New source files initially show `Description to be added.`
 
 `scripts/openmc_api_index.py` recognizes selected OpenMC constructors, functions, and methods in Python notebooks and scripts without executing them. It supplies documentation links for the **OpenMC API** column; a dash means no recognized call was found. It does not inspect C++ code or infer every call on dynamically constructed objects.
 
-Notebook links in `index.md` open MyST pages; `.py` and `.cpp` links open GitHub. Published notebooks are selected using `myst.yml`. The file listing includes files tracked by Git and new files that are not ignored. Empty directories, checkpoints, caches, and virtual environments do not appear; keep unwanted files and large data directories in `.gitignore`.
+Notebook links in the exploration tables open MyST pages; `.py` and `.cpp` links open GitHub. Published notebooks are selected using `myst.yml`. The file inventory used for galleries and exploration tables includes files tracked by Git and nonignored new files. Empty directories, checkpoints, caches, and virtual environments do not appear; keep unwanted files and large data directories in `.gitignore`.
 
-The generator expects `generated:structure` under **Explorations** in `README.md` and `generated:exploration-notes` under **Nuts and bolts**, followed by `generated:notebooks` under **Explorations**, in `index.md`. If these headings or markers are missing or misplaced, it reports an error rather than rearranging the page. The earlier heading reorganization belongs to the separate one-off script `one_off/nuts_and_bolts_layout.py`, not to routine automation.
+The generator requires one `generated:structure` block in `README.md`. In `index.md`, `generated:exploration-notes` must remain inside **Nuts and bolts**, and `generated:gallery` must precede `generated:notebooks`. The script updates these marked sections and reports an error if required markers are missing or misplaced.
 
 Only the marked notebook outline is updated. The code, outputs, execution counts, and metadata are retained, although the notebook's JSON formatting may change. If a notebook is open during an update, reload it before saving again so the refreshed outline is not overwritten.
 
-## 2. Update exploration lists and notebook outlines
+## 2. Update galleries, exploration tables, and notebook outlines
 
 From the repository root, run the update and inspect the changes:
 
@@ -95,7 +99,7 @@ python3 scripts/update_structure.py --pages-only --check
 
 `--check` reports stale files but changes nothing. A second normal run should make no further changes. The `--readme-only` option updates only `README.md`; use `--pages-only` when the two pages need to stay synchronized.
 
-Run the script after adding, moving, or renaming explorations; changing notebook headings or descriptions; or editing shared README text. Check the descriptions of new or renamed `.py` and `.cpp` files in `index.md`.
+Run the script after adding, moving, or renaming explorations or section-level SVGs; changing notebook headings or descriptions; editing `myst.yml`; or editing shared README text. Check the thumbnail destinations and the descriptions of new or renamed `.py` and `.cpp` files in `index.md`.
 
 ## 3. Set up checks before committing
 
@@ -123,7 +127,7 @@ pre-commit run --all-files
 
 Four checks are included:
 
-1. **Exploration lists and outlines:** Refreshes notebook outlines, generated lists, and shared documentation.
+1. **Galleries, exploration tables, and outlines:** Refreshes SVG galleries, notebook outlines, generated tables, and shared documentation.
 2. **Notebook structure:** Uses `nbformat` to check notebook-file validity, without executing cells.
 3. **Local links:** Checks repository file and directory links, including notebook Markdown. It does not check heading links, notebook attachments, or links in code and outputs.
 4. **Python errors:** Uses Ruff (`E9,F63,F7,F82,F401`) to find syntax errors, invalid control flow, undefined names, and unused imports. It is not a full code review.
@@ -171,7 +175,7 @@ The automatic checks have a deliberately limited scope. The following still need
 
 [`.github/workflows/notebooks.yml`](../.github/workflows/notebooks.yml) runs after pushes and pull requests, or when started manually. Under **Actions**, open **Validate notebooks** to inspect its results. Use **Run workflow** for a manual run when the workflow is available on the default branch.
 
-On GitHub, generated content is checked with `--check` without changing it. If the report says an outline or exploration list is out of date, run `python scripts/update_structure.py` locally, review the differences, and commit them.
+On GitHub, generated content is checked with `--check` without changing it. If the report says an outline, gallery, or exploration table is out of date, run `python scripts/update_structure.py` locally, review the differences, and commit them.
 
 Two of the checks can also be run directly on your computer:
 

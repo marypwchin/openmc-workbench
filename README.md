@@ -36,6 +36,7 @@ Rather than a polished end-user tutorial, the workbench is a record of ongoing e
 <!-- generated:structure -->
 <p>
   <a href="0_nuclear_data/README.md"><img src="0_nuclear_data/openmc_exploring_endf_b81.svg" alt="OpenMC exploring endf b81" width="280"></a>
+  <a href="1_cross_sections/README.md"><img src="1_cross_sections/ways_to_plot.svg" alt="ways to plot" width="280"></a>
   <a href="2_materials/README.md"><img src="2_materials/material_definition_methods.svg" alt="material definition methods" width="280"></a>
   <a href="3_geometry/README.md"><img src="3_geometry/pacman_map_to_geometries.svg" alt="pacman map to geometries" width="280"></a>
   <a href="4_run/README.md"><img src="4_run/tritium_breeding_context.svg" alt="tritium breeding context" width="280"></a>

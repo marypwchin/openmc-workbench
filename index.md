@@ -96,6 +96,10 @@ the [ENDF/B-VIII.1 exploration notebook](0_nuclear_data/0_1_explore_endf_b81.ipy
 :::
 
 :::{grid-item}
+[![ways to plot](1_cross_sections/ways_to_plot.svg)](1_cross_sections/1_0_ways_to_plot.ipynb)
+:::
+
+:::{grid-item}
 [![material definition methods](2_materials/material_definition_methods.svg)](2_materials/2_0_ways_to_define_materials.ipynb)
 :::
 
