@@ -8,6 +8,8 @@
 
 **→** [5_1_runtime_metrics_from_multisystems_runs.ipynb](5_1_runtime_metrics_from_multisystems_runs.ipynb)
 
+**→** [5_2_combine_tallies_from_multisystems_runs.ipynb](5_2_combine_tallies_from_multisystems_runs.ipynb)
+
 ## Enabling MPI in OpenMC across computing platforms
 
 This is a log of getting OpenMC working on the computing systems used for the Workbench's MPI, HPC, and HTC explorations. It documents the environments, obstacles, failed approaches, and workarounds encountered along the way. All installation and execution obstacles were successfully resolved, and MPI-enabled OpenMC ran on all three systems.

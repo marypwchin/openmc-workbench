@@ -1,5 +1,11 @@
 # OpenMC Workbench
 
+```{image} assets/logo.png
+:alt: A colorful die, particle-like trajectories, and research books above a wooden workbench
+:width: 300px
+:align: center
+```
+
 <!-- shared:introduction -->
 
 This workbench is an expression of the joy of experimentation — running simulations in the laboratory of computers. Starting from a first installation of [OpenMC](https://openmc.org/), a radiation-transport enthusiast explores.
@@ -167,6 +173,7 @@ the [ENDF/B-VIII.1 exploration notebook](0_nuclear_data/0_1_explore_endf_b81.ipy
 | --- | --- | --- |
 | [`5_0_test_mpi.cpp`](https://github.com/marypwchin/openmc-workbench/blob/main/5_MPI_OpenMP_Slurm/5_0_test_mpi.cpp) | A minimal MPI program that verifies initialization and communication between processes by summing values across them, independently of OpenMC. | — |
 | [`5_1_runtime_metrics_from_multisystems_runs.ipynb`](5_MPI_OpenMP_Slurm/5_1_runtime_metrics_from_multisystems_runs.ipynb) | Collect OpenMC runtimes from six different computing systems. To gain familiarity with the OpenMC ecosystem, extract runtime data in three ways: from stdout logs, through `openmc.StatePoint`, and directly from HDF5 files using `h5py`. | [`StatePoint()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.StatePoint.html) |
+| [`5_2_combine_tallies_from_multisystems_runs.ipynb`](5_MPI_OpenMP_Slurm/5_2_combine_tallies_from_multisystems_runs.ipynb) | Combine OpenMC statepoints from multiple computing systems and plot neutron fluence and standard-error maps. | [`StatePoint()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.StatePoint.html), [`StatePoint.get_tally()`](https://docs.openmc.org/en/stable/pythonapi/generated/openmc.StatePoint.html#openmc.StatePoint.get_tally) |
 <!-- /generated:notebooks -->
 
 ## Nuclear-data paths
